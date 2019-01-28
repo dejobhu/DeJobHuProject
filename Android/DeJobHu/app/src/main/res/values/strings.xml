@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DeJobHu</string>
+    <string name="findID">아이디/비밀번호 찾기</string>
+    <string name="signUp">회원가입</string>
+    <string name="IDorEmail">아이디 또는 이메일</string>
+    <string name="Password">비밀번호</string>
+    <string name="Login">로그인</string>
 </resources>
