@@ -5,4 +5,6 @@
     <string name="IDorEmail">아이디 또는 이메일</string>
     <string name="Password">비밀번호</string>
     <string name="Login">로그인</string>
+    <string name="Error_ID">아이디 또는 이메일 아이디를 입력해주세요</string>
+    <string name="Error_Password">비밀번호를 입력해주세요</string>
 </resources>
