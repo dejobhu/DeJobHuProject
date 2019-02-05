@@ -29,7 +29,7 @@ public class MainFormActivity extends AppCompatActivity
         Button Appbar_My=toolbar.findViewById(R.id.appbar_btn_1);
         Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
 
-        //색깔 설정
+        //툴바안 글씨 색깔 설정
         Appbar_My.setTextColor(Color.rgb(0,0,0));
         Appbar_SNS.setTextColor(Color.rgb(0,0,0));
 
@@ -73,6 +73,7 @@ public class MainFormActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
