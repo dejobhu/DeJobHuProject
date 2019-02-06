@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +18,14 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+
+
+
 public class MainFormActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,7 @@ public class MainFormActivity extends AppCompatActivity
 
         Button Appbar_My=toolbar.findViewById(R.id.appbar_btn_1);
         Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
+
 
         //툴바안 글씨 색깔 설정
         Appbar_My.setTextColor(Color.rgb(0,0,0));
@@ -72,7 +80,9 @@ public class MainFormActivity extends AppCompatActivity
 
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -82,6 +92,8 @@ public class MainFormActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        }else if(getSupportFragmentManager().getBackStackEntryCount() >= 1) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -108,7 +120,16 @@ public class MainFormActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+    public void bindRecycleView(){
+        ArrayList<Question> arrayList= new ArrayList<Question>();
 
+        arrayList.add(new Question("임수현","(속보)프젝 2개 어때","2019-02-05"));
+        arrayList.add(new Question("양민욱","(속보)소프 프젝어때","2019-02-05"));
+        arrayList.add(new Question("장희승","(속보)집 언제가","2019-02-05"));
+        arrayList.add(new Question("김남수","(속보)IOS 이쁨","2019-02-05"));
+
+
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
