@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.dejobhu.skhu.dejobhu.Fragment.QuestionListFragment;
+
 import java.util.ArrayList;
 
 
@@ -81,8 +83,15 @@ public class MainFormActivity extends AppCompatActivity
         toggle.syncState();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new QuestionListFragment())
+                    .commit();
+        }
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -120,16 +129,7 @@ public class MainFormActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-    public void bindRecycleView(){
-        ArrayList<Question> arrayList= new ArrayList<Question>();
 
-        arrayList.add(new Question("임수현","(속보)프젝 2개 어때","2019-02-05"));
-        arrayList.add(new Question("양민욱","(속보)소프 프젝어때","2019-02-05"));
-        arrayList.add(new Question("장희승","(속보)집 언제가","2019-02-05"));
-        arrayList.add(new Question("김남수","(속보)IOS 이쁨","2019-02-05"));
-
-
-    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

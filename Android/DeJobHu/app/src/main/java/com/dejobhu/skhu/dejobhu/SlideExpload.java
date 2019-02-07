@@ -16,7 +16,7 @@ import android.view.ViewGroup;
  * below the epic centre to transition downwards.
  */
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-class SlideExplode extends Visibility {
+public class SlideExpload extends Visibility {
     private final int[] mTempLoc = new int[2];
     private final String KEY_SCREEN_BOUNDS = "screenBounds";
 

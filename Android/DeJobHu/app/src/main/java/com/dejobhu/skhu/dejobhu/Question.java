@@ -4,7 +4,6 @@ import android.os.Build;
 
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 
 public class Question {
     String name;
@@ -41,7 +40,7 @@ public class Question {
         this.timestep = timestep;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,7 +51,7 @@ public class Question {
                 Objects.equals(timestep, question.timestep);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     public int hashCode() {
         return Objects.hash(name, body, timestep);
