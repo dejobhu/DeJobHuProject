@@ -5,6 +5,9 @@ package com.dejobhu.skhu.dejobhu.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Rect;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -100,19 +104,19 @@ public class QuestionListFragment extends Fragment {
 
 
             //현재 body 기준으로 갈라짐
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때1","2019-02-05"));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때2","2019-02-05"));
-            arrayList.add(new Question("장희승","(속보)집 언제가3","2019-02-05"));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨4","2019-02-05"));
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때5","2019-02-05"));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때6","2019-02-05"));
-            arrayList.add(new Question("장희승","(속보)집 언제가7","2019-02-05"));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨8","2019-02-05"));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨9","2019-02-05"));
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때10","2019-02-05"));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때11","2019-02-05"));
-            arrayList.add(new Question("장희승","(속보)집 언제가12","2019-02-05"));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨13","2019-02-05"));
+            arrayList.add(new Question("임수현","(속보)프젝 2개 어때1","2019-02-05",null));
+            arrayList.add(new Question("양민욱","(속보)소프 프젝어때2","2019-02-05",null));
+            arrayList.add(new Question("장희승","(속보)집 언제가3","2019-02-05",null));
+            arrayList.add(new Question("김남수","(속보)IOS 이쁨4","2019-02-05",null));
+            arrayList.add(new Question("임수현","(속보)프젝 2개 어때5","2019-02-05",null));
+            arrayList.add(new Question("양민욱","(속보)소프 프젝어때6","2019-02-05",null));
+            arrayList.add(new Question("장희승","(속보)집 언제가7","2019-02-05",null));
+            arrayList.add(new Question("김남수","(속보)IOS 이쁨8","2019-02-05",null));
+            arrayList.add(new Question("김남수","(속보)IOS 이쁨9","2019-02-05",null));
+            arrayList.add(new Question("임수현","(속보)프젝 2개 어때10","2019-02-05",null));
+            arrayList.add(new Question("양민욱","(속보)소프 프젝어때11","2019-02-05",null));
+            arrayList.add(new Question("장희승","(속보)집 언제가12","2019-02-05",null));
+            arrayList.add(new Question("김남수","(속보)IOS 이쁨13","2019-02-05",null));
             ((QuestionAdapter)adapter).setData(arrayList);
             getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
@@ -214,7 +218,11 @@ public class QuestionListFragment extends Fragment {
             };
 
             holder.bindListener(mData.get(position).getBody(),listener);
-
+            try{
+                holder.imageView.setImageBitmap(mData.get(position).getImage());
+            }catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             holder.body.setText(mData.get(position).getBody());
             holder.ID.setText(mData.get(position).getName());
             holder.Time.setText(mData.get(position).getTimestep());
@@ -234,6 +242,7 @@ public class QuestionListFragment extends Fragment {
         TextView body;
         TextView ID;
         TextView Time;
+        ImageView imageView;
         View view;
 
         public QuestionViewHolder(@NonNull View itemView) {
@@ -242,6 +251,12 @@ public class QuestionListFragment extends Fragment {
             body=itemView.findViewById(R.id.question_title);
             ID=itemView.findViewById(R.id.question_id);
             Time=itemView.findViewById(R.id.question_time);
+            imageView=itemView.findViewById(R.id.question_image);
+
+            imageView.setBackground(new ShapeDrawable(new OvalShape()));  // 이미지 둥그렇게 만들기
+            if(Build.VERSION.SDK_INT >= 21) {
+                imageView.setClipToOutline(true);
+            }
         }
 
         void bindListener(String question,View.OnClickListener listener)

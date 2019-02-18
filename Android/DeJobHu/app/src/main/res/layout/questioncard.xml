@@ -2,13 +2,25 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#cccccc"
     android:padding="10dp">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:id="@+id/question_image"
+        android:src="@mipmap/ic_launcher"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/question_id"
+        android:layout_marginTop="5dp"
+        android:layout_alignTop="@id/question_image"
+        android:layout_toRightOf="@id/question_image"
         android:text="kimud"
+        android:textColor="#000000"
+        android:textStyle="bold"
         android:textSize="17sp"/>
 
     <TextView
@@ -23,6 +35,8 @@
         android:id="@+id/question_title"
         android:text="How to replace here"
         android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textStyle="bold"
         android:layout_below="@id/question_id"
         android:textSize="19sp"/>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 
 import java.util.Objects;
@@ -9,11 +10,21 @@ public class Question {
     String name;
     String body;
     String timestep;
+    Bitmap image;
 
-    public Question(String ID,String body,String time){
+    public Question(String ID,String body,String time,Bitmap bitmap){
         name=ID;
         this.body=body;
         this.timestep=time;
+        this.image=bitmap;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 
     public String getName() {
