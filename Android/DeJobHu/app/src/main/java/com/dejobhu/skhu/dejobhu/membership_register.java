@@ -1,10 +1,7 @@
 package com.dejobhu.skhu.dejobhu;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,49 +9,74 @@ import android.widget.TextView;
 import android.widget.Button;
 
 public class membership_register extends AppCompatActivity {
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
 
-        TextView textView_findId = (TextView)findViewById(R.id.textView_findID);
-        TextView textView_membership = (TextView)findViewById(R.id.textView_membership);
-        final EditText editText_ID = (EditText)findViewById(R.id.editText_ID);
+        final TextView textView_ErrorNick = (TextView)findViewById(R.id.textView_ErrorNick);
+        final TextView textView_ErrorEmail_ID = (TextView)findViewById(R.id.textView_ErrorEmail_ID);
+        final TextView textView_ErrorPassword = (TextView)findViewById(R.id.textView_ErrorPass);
+        final TextView textView_ErrorPassword2 = (TextView)findViewById(R.id.textView_ErrorPass2);
+        final EditText editText_nickName = (EditText)findViewById(R.id.editText_nickName);
+        final EditText editText_Email_ID = (EditText)findViewById(R.id.editText_Email_ID);
         final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
-        ImageView imageView_Close = (ImageView)findViewById(R.id.imageView_Close);
-
-        Button Button_Login = (Button)findViewById(R.id.Button_Login);
-        Button_Login.setOnClickListener(new View.OnClickListener() {
+        final EditText editText_Password2 = (EditText)findViewById(R.id.editText_Password2);
+        Button button_signUp = (Button)findViewById(R.id.button_signUp);
+        button_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String loginID = editText_ID.getText().toString();
-                if(isEmptyOrWhiteSpace(loginID))
-                    editText_ID.setError("아이디 또는 이메일 아이디를 입력해주세요");
+                String Nickname = editText_nickName.getText().toString();
+                if(isEmptyOrWhiteSpace(Nickname))
+                    textView_ErrorNick.setVisibility(View.VISIBLE);
+                else {
+                    textView_ErrorNick.setVisibility(View.INVISIBLE);
+                    if(Nickname.length() < 2 || Nickname.length() > 10)
+                        editText_nickName.setError("2-10자로 입력해주세요");
+                }
 
+                String Email_ID = editText_Email_ID.getText().toString();
+                if(isEmptyOrWhiteSpace(Email_ID))
+                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
+                else {
+                    if(Email_ID.contains("@"))
+                        textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
+                    else
+                        editText_Email_ID.setError("이메일 형식으로 입력해주세요");
+                    //@를 포함했는지 안했는지 추가해야됨
+                }
                 String Password = editText_Password.getText().toString();
                 if(isEmptyOrWhiteSpace(Password))
-                    editText_Password.setError("비밀번호를 입력해주세요");
+                    textView_ErrorPassword.setVisibility(View.VISIBLE);
+                else {
+                    textView_ErrorPassword.setVisibility(View.INVISIBLE);
+                    if(Password.length() < 8 || Password.length() > 20)
+                        editText_Password.setError("8-20자로 입력해주세요");
+                }
+
+                String Password2 = editText_Password2.getText().toString();
+                if(isEmptyOrWhiteSpace(Password2))
+                    textView_ErrorPassword2.setVisibility(View.VISIBLE);
+                else {
+                    textView_ErrorPassword2.setVisibility(View.INVISIBLE);
+                    if(Password != Password2)
+                        editText_Password2.setError("비밀번호와 같지 않습니다");
+                }
+
             }
         });
 
+
+        ImageView imageView_Close = (ImageView)findViewById(R.id.imageView_Close);
         imageView_Close.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 onBackPressed();
             }
         });
-
-        SpannableString content1 = new SpannableString("아이디/비밀번호 찾기");
-        content1.setSpan(new UnderlineSpan(), 0, textView_findId.length(), 0);
-        textView_findId.setText(content1);
-
-        SpannableString content2 = new SpannableString("회원가입");
-        content2.setSpan(new UnderlineSpan(), 0, textView_membership.length(), 0);
-        textView_membership.setText(content2);
     }
 
     static boolean isEmptyOrWhiteSpace(String s){
         if (s == null) return true;
         return s.trim().length() == 0;
     }
-
 }

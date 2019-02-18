@@ -13,8 +13,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button main_button = (Button)findViewById(R.id.button_login);
-        main_button.setOnClickListener(new View.OnClickListener() {
+        Button login_button = (Button)findViewById(R.id.button_gologin);
+        login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, activity_login.class);
+                startActivity(intent);
+            }
+        });
+
+        Button signUp_button = (Button)findViewById(R.id.button_signUp);
+        signUp_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, membership_register.class);

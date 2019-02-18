@@ -2,9 +2,16 @@
     <string name="app_name">DeJobHu</string>
     <string name="findID">아이디/비밀번호 찾기</string>
     <string name="signUp">회원가입</string>
-    <string name="IDorEmail">아이디 또는 이메일</string>
+    <string name="Email_ID">이메일 아이디</string>
     <string name="Password">비밀번호</string>
+    <string name="Password2">비밀번호 확인</string>
     <string name="Login">로그인</string>
-    <string name="Error_ID">아이디 또는 이메일 아이디를 입력해주세요</string>
     <string name="Error_Password">비밀번호를 입력해주세요</string>
+    <string name="Error_Email_ID">이메일 아이디를 입력해 주세요</string>
+    <string name="nickName">닉네임</string>
+    <string name="input_Email_ID">anonymous@naver.com</string>
+    <string name="input_nickname">2-10자로 입력해주세요</string>
+    <string name="input_password">8-20자로 입력해주세요</string>
+    <string name="input_password2">비밀번호를 한 번 더 입력해주세요</string>
+    <string name="Error_Nick">닉네임을 입력해주세요</string>
 </resources>
