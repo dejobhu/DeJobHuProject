@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Fragment.QuestionListFragment;
@@ -33,38 +34,35 @@ public class MainFormActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_form);
+
+        //----------------------Toobar Setting---------------------------------------------------
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         Button Appbar_My=toolbar.findViewById(R.id.appbar_btn_1);
-        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
-
-
+//        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
         //툴바안 글씨 색깔 설정
         Appbar_My.setTextColor(Color.rgb(0,0,0));
-        Appbar_SNS.setTextColor(Color.rgb(0,0,0));
-
+//        Appbar_SNS.setTextColor(Color.rgb(0,0,0));
         Appbar_My.setTextSize(18.5f);
-        Appbar_SNS.setTextSize(18.5f);
-        //버튼 리스너
+//        Appbar_SNS.setTextSize(18.5f);
+//        //버튼 리스너
         Appbar_My.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainFormActivity.this,"My test",Toast.LENGTH_LONG).show();
             }
         });
-        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainFormActivity.this,"SNS test",Toast.LENGTH_LONG).show();
-            }
-        });
+//        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MainFormActivity.this,"SNS test",Toast.LENGTH_LONG).show();
+//            }
+//        });
+
         setSupportActionBar(toolbar);
-
         //기본 타이틀바 없애기
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setElevation(0);
-
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //---------------------------------------------------------------------------------------------------------
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -79,10 +77,7 @@ public class MainFormActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-
         toggle.syncState();
-
-
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -90,9 +85,7 @@ public class MainFormActivity extends AppCompatActivity
                     .replace(R.id.container, new QuestionListFragment())
                     .commit();
         }
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -141,8 +134,6 @@ public class MainFormActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 

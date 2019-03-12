@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:gravity="center"
     android:layout_height="match_parent"
     tools:context=".MainFormActivity">
 
@@ -10,31 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/main_appbar"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:background="#ffffff">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="#ffffff"
+            android:minHeight="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:layout_gravity="center|left"
-                android:id="@+id/appbar_btn_1"
-                android:text="My"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SNS"
-                android:layout_gravity="left|center"
-                android:id="@+id/appbar_btn_2"
-                android:background="@null"/>
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_gravity="center"
+            android:id="@+id/appbar_btn_1"
+            android:text="DeJobHu"/>
 
 
         </android.support.v7.widget.Toolbar>

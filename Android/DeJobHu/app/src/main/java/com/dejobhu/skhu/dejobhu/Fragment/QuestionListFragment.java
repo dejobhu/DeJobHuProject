@@ -209,7 +209,9 @@ public class QuestionListFragment extends Fragment {
                                 .replace(R.id.container, fragment)
                                 .addToBackStack(null)
                                 .addSharedElement(holder1.itemView,getString(R.string.transition_name))
-                                .commit();
+                               .commit();
+
+
                     }catch (NullPointerException e)
                     {
                         e.printStackTrace();
