@@ -21,6 +21,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main_form"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".membership_register" />
+        <activity android:name=".activity_login" />
     </application>
 
 </manifest>
