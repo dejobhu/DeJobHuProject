@@ -4,11 +4,15 @@ package com.dejobhu.skhu.dejobhu.Fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +40,8 @@ import com.dejobhu.skhu.dejobhu.SlideExpload;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -228,6 +234,7 @@ public class QuestionListFragment extends Fragment {
             holder.body.setText(mData.get(position).getBody());
             holder.ID.setText(mData.get(position).getName());
             holder.Time.setText(mData.get(position).getTimestep());
+            holder.imageView.setImageResource(R.drawable.face);
         }
 
         @Override
@@ -255,10 +262,7 @@ public class QuestionListFragment extends Fragment {
             Time=itemView.findViewById(R.id.question_time);
             imageView=itemView.findViewById(R.id.question_image);
 
-            imageView.setBackground(new ShapeDrawable(new OvalShape()));  // 이미지 둥그렇게 만들기
-            if(Build.VERSION.SDK_INT >= 21) {
-                imageView.setClipToOutline(true);
-            }
+
         }
 
         void bindListener(String question,View.OnClickListener listener)
