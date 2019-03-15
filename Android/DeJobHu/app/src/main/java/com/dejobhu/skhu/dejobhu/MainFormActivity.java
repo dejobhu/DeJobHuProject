@@ -1,5 +1,6 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -68,8 +69,11 @@ public class MainFormActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent=new Intent(MainFormActivity.this,AddQustion.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -86,6 +90,10 @@ public class MainFormActivity extends AppCompatActivity
                     .commit();
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+        // 별점 받아오기 , 프로필 받아오기, 회원등급 받아오기
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 

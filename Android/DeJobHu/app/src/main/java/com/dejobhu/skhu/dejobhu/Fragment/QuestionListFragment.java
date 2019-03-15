@@ -244,7 +244,12 @@ public class QuestionListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mData.size();
+            try {
+                return mData.size();
+            }catch (NullPointerException e)
+            {
+                return 0;
+            }
         }
     }
     class QuestionViewHolder extends RecyclerView.ViewHolder {
