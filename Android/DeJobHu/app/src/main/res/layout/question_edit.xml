@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="입력예시 ex) for문을 모르겠어요 ㅜㅜ"
+    android:textSize="18sp"
+    android:textColor="#404040"
+    android:padding="15dp"
+    android:background="@null"
+    android:layout_margin="15dp"
+    >
+
+</EditText>

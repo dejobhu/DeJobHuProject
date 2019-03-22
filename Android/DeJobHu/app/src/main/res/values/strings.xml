@@ -11,6 +11,10 @@
     <string name="transition_name">transition_name</string>
     <string name="transition_sns">transition_sns</string>
 
+    <!--글 추가-->
+    <string name="edittext">본문 글 추가</string>
+    <string name="image">이미지 추가</string>
+
     <string name="findID">아이디/비밀번호 찾기</string>
     <string name="signUp">회원가입</string>
     <string name="Email_ID">이메일 아이디</string>

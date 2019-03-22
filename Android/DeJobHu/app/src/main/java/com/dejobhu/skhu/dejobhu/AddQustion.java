@@ -7,18 +7,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
+
+import java.util.ArrayList;
 
 public class AddQustion extends AppCompatActivity {
 
+    LinearLayout view;
+    ArrayList<View> viewArrayList=new ArrayList<>();
+    ArrayList<String> keyArrayList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_qustion);
+
 
 
         //----------------------Toobar Setting---------------------------------------------------
@@ -38,6 +46,7 @@ public class AddQustion extends AppCompatActivity {
                 Toast.makeText(AddQustion.this,"My test",Toast.LENGTH_LONG).show();
             }
         });
+        view=findViewById(R.id.Add_Question_view);
 //        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -52,13 +61,35 @@ public class AddQustion extends AppCompatActivity {
 
 
         BoomMenuButton bmm=findViewById(R.id.bmb);
-        for (int i = 0; i < bmm.getPiecePlaceEnum().pieceNumber(); i++) {
+
             HamButton.Builder builder = new HamButton.Builder()
                     .normalImageRes(android.R.drawable.ic_menu_save)
-                    .normalTextRes(R.string.app_name)
-                    .subNormalTextRes(R.string.action_settings);
+                    .normalTextRes(R.string.edittext)
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            View v=getLayoutInflater().inflate(R.layout.question_edit,null);
+                            viewArrayList.add(v);
+                            keyArrayList.add("text");
+                            view.addView(v);
+                        }
+                    });
             bmm.addBuilder(builder);
-        }
+
+            builder = new HamButton.Builder()
+                .normalImageRes(android.R.drawable.ic_menu_save)
+                .normalTextRes(R.string.image)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                            View v=getLayoutInflater().inflate(R.layout.question_image,null);
+                            viewArrayList.add(v);
+                            keyArrayList.add("image");
+                            view.addView(v);
+                    }
+                });
+        bmm.addBuilder(builder);
+
     }
 
 
