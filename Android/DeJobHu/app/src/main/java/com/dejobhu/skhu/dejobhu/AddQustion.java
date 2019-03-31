@@ -7,13 +7,17 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.akshay_naik.texthighlighterapi.TextHighlighter;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -77,9 +81,18 @@ public class AddQustion extends AppCompatActivity {
                             if(viewArrayList.size()>0) {
                                 View beforeview = viewArrayList.get(viewArrayList.size() - 1);
                                 beforeview.findViewById(R.id.question_btn).setVisibility(View.GONE);
+
+                                try{
+                                    beforeview.findViewById(R.id.question_JavaORText_btn).setVisibility(View.GONE);
+                                }catch (NullPointerException e)
+                                {
+                                    e.printStackTrace();
+                                }
                             }
                             View v=getLayoutInflater().inflate(R.layout.question_edit,null);
                             v.findViewById(R.id.question_btn).setOnClickListener(listener);
+                            v.findViewById(R.id.question_JavaORText_btn).setOnClickListener(Javalistener);
+
                             viewArrayList.add(v);
                             keyArrayList.add("text");
                             view.addView(v);
@@ -96,6 +109,12 @@ public class AddQustion extends AppCompatActivity {
                             if(viewArrayList.size()>0) {
                             View beforeview = viewArrayList.get(viewArrayList.size() - 1);
                             beforeview.findViewById(R.id.question_btn).setVisibility(View.GONE);
+                                try{
+                                    beforeview.findViewById(R.id.question_JavaORText_btn).setVisibility(View.GONE);
+                                }catch (NullPointerException e)
+                                {
+                                    e.printStackTrace();
+                                }
                             }
                             View v=getLayoutInflater().inflate(R.layout.question_image,null);
                             v.findViewById(R.id.question_btn).setOnClickListener(listener);
@@ -109,6 +128,26 @@ public class AddQustion extends AppCompatActivity {
 
     }
 
+    View.OnClickListener Javalistener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if(((Button)v).getText().toString().compareTo("Java")==0) {
+                TextHighlighter highlighter = new TextHighlighter();
+                highlighter.setLanguage(TextHighlighter.JAVA);
+
+                String highlightedText = highlighter.getHighlightedText(((EditText)viewArrayList.get(viewArrayList.size()-1).findViewById(R.id.question_edit_text)).getText().toString());
+                ((EditText) viewArrayList.get(viewArrayList.size() - 1).findViewById(R.id.question_edit_text)).setText(Html.fromHtml(highlightedText));
+                ((Button)v).setText("Text");
+            }else
+            {
+                String s= ((EditText) viewArrayList.get(viewArrayList.size() - 1).findViewById(R.id.question_edit_text)).getText().toString();
+                ((EditText) viewArrayList.get(viewArrayList.size() - 1).findViewById(R.id.question_edit_text)).setText(s);
+                ((Button)v).setText("Java");
+            }
+        }
+    };
+
     View.OnClickListener listener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -119,6 +158,13 @@ public class AddQustion extends AppCompatActivity {
             if(viewArrayList.size()>0) {
                 View v1 = viewArrayList.get(viewArrayList.size() - 1);
                 v1.findViewById(R.id.question_btn).setVisibility(View.VISIBLE);
+
+                try{
+                    v1.findViewById(R.id.question_JavaORText_btn).setVisibility(View.VISIBLE);
+                }catch (NullPointerException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     };

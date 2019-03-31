@@ -73,7 +73,6 @@ public class MainFormActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
                 Intent intent=new Intent(MainFormActivity.this,AddQustion.class);
                 startActivity(intent);
-                finish();
             }
         });
 

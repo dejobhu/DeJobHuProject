@@ -48,7 +48,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 public class QuestionListFragment extends Fragment {
 
     FastOutSlowInInterpolator transition=new FastOutSlowInInterpolator();
-    private final Long TRASITION_DURATION=3000L;
+    private final Long TRASITION_DURATION=1000L;
     private final String TAP_POSTION="tap_position";
 
     private  int tapPosition=NO_POSITION;
