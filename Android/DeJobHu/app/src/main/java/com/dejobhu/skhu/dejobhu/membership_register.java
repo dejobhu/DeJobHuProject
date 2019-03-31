@@ -1,17 +1,48 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class membership_register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
+
+
+        //----------------------Toobar Setting---------------------------------------------------
+        Toolbar toolbar = (Toolbar) findViewById(R.id.register_toolbar);
+
+       // Button Appbar_My=toolbar.findViewById(R.id.register_appbar_btn_1);
+//        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
+        //툴바안 글씨 색깔 설정
+       // Appbar_My.setTextColor(Color.rgb(0,0,0));
+//        Appbar_SNS.setTextColor(Color.rgb(0,0,0));
+        //Appbar_My.setTextSize(18.5f);
+//        Appbar_SNS.setTextSize(18.5f);
+//        //버튼 리스너
+        //view=findViewById(R.id.Add_Question_view);
+//        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MainFormActivity.this,"SNS test",Toast.LENGTH_LONG).show();
+//            }
+//        });
+
+        setSupportActionBar(toolbar);
+        //기본 타이틀바 없애기
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //---------------------------------------------------------------------------------------------------------
+
 
         final TextView textView_ErrorNick = (TextView)findViewById(R.id.textView_ErrorNick);
         final TextView textView_ErrorEmail_ID = (TextView)findViewById(R.id.textView_ErrorEmail_ID);
@@ -66,13 +97,18 @@ public class membership_register extends AppCompatActivity {
         });
 
 
-        ImageView imageView_Close = (ImageView)findViewById(R.id.imageView_Close);
-        imageView_Close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     static boolean isEmptyOrWhiteSpace(String s){

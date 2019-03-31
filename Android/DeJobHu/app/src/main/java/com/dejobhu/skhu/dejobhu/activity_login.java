@@ -22,8 +22,16 @@ public class activity_login extends AppCompatActivity {
         final TextView textView_ErrorPassword = (TextView)findViewById(R.id.textView_ErrorPass);
         final EditText editText_Email_ID = (EditText)findViewById(R.id.editText_Email_ID);
         final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
-        ImageView imageView_Close = (ImageView)findViewById(R.id.imageView_Close);
         Button button_login = (Button)findViewById(R.id.button_login);
+
+
+        textView_membership.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(activity_login.this,membership_register.class);
+                startActivity(intent);
+            }
+        });
 
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override

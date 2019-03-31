@@ -67,6 +67,7 @@ public class AddQustion extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //기본 타이틀바 없애기
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //---------------------------------------------------------------------------------------------------------
 
 
