@@ -73,7 +73,7 @@ public class AddQustion extends AppCompatActivity {
         BoomMenuButton bmm=findViewById(R.id.bmb);
 
             HamButton.Builder builder = new HamButton.Builder()
-                    .normalImageRes(android.R.drawable.ic_menu_save)
+                    .normalImageRes(R.drawable.ic_subject_black_24dp)
                     .normalTextRes(R.string.edittext)
                     .listener(new OnBMClickListener() {
                         @Override
@@ -101,7 +101,7 @@ public class AddQustion extends AppCompatActivity {
             bmm.addBuilder(builder);
 
             builder = new HamButton.Builder()
-                .normalImageRes(android.R.drawable.ic_menu_save)
+                .normalImageRes(R.drawable.ic_photo_size_select_actual_black_24dp)
                 .normalTextRes(R.string.image)
                 .listener(new OnBMClickListener() {
                     @Override
