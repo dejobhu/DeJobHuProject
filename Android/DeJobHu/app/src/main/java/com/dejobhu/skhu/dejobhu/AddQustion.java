@@ -1,5 +1,8 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -15,6 +19,7 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AddQustion extends AppCompatActivity {
@@ -22,6 +27,7 @@ public class AddQustion extends AppCompatActivity {
     LinearLayout view;
     ArrayList<View> viewArrayList=new ArrayList<>();
     ArrayList<String> keyArrayList=new ArrayList<>();
+    ImageView SelectImageview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,12 @@ public class AddQustion extends AppCompatActivity {
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
+                            if(viewArrayList.size()>0) {
+                                View beforeview = viewArrayList.get(viewArrayList.size() - 1);
+                                beforeview.findViewById(R.id.question_btn).setVisibility(View.GONE);
+                            }
                             View v=getLayoutInflater().inflate(R.layout.question_edit,null);
+                            v.findViewById(R.id.question_btn).setOnClickListener(listener);
                             viewArrayList.add(v);
                             keyArrayList.add("text");
                             view.addView(v);
@@ -82,7 +93,13 @@ public class AddQustion extends AppCompatActivity {
                 .listener(new OnBMClickListener() {
                     @Override
                     public void onBoomButtonClick(int index) {
+                            if(viewArrayList.size()>0) {
+                            View beforeview = viewArrayList.get(viewArrayList.size() - 1);
+                            beforeview.findViewById(R.id.question_btn).setVisibility(View.GONE);
+                            }
                             View v=getLayoutInflater().inflate(R.layout.question_image,null);
+                            v.findViewById(R.id.question_btn).setOnClickListener(listener);
+                            v.findViewById(R.id.question_image).setOnClickListener(ImageListener);
                             viewArrayList.add(v);
                             keyArrayList.add("image");
                             view.addView(v);
@@ -92,6 +109,32 @@ public class AddQustion extends AppCompatActivity {
 
     }
 
+    View.OnClickListener listener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            view.removeView(viewArrayList.get(viewArrayList.size()-1));
+            viewArrayList.remove(viewArrayList.size()-1);
+            keyArrayList.remove(keyArrayList.size()-1);
+
+            if(viewArrayList.size()>0) {
+                View v1 = viewArrayList.get(viewArrayList.size() - 1);
+                v1.findViewById(R.id.question_btn).setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+    View.OnClickListener ImageListener =new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            SelectImageview=(ImageView)v;
+
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, 1);
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,5 +147,25 @@ public class AddQustion extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                try {
+                    // 선택한 이미지에서 비트맵 생성
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    in.close();
+                    // 이미지 표시
+                    if(SelectImageview !=null);
+                    SelectImageview.setImageBitmap(img);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
