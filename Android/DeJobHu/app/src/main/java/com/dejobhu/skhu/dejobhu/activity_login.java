@@ -5,13 +5,28 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 
+import com.dejobhu.skhu.dejobhu.Singleton.httpTest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class activity_login extends AppCompatActivity {
+    httpTest ht = httpTest.getInstance();
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -36,27 +51,38 @@ public class activity_login extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String Email_ID = editText_Email_ID.getText().toString();
-                if(isEmptyOrWhiteSpace(Email_ID))
-                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
-                else {
-                    textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
-                    return;
-                }
+//                String Email_ID = editText_Email_ID.getText().toString();
+//                if(isEmptyOrWhiteSpace(Email_ID))
+//                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
+//                else {
+//                    textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
+//                    return;
+//                }
+//
+//                String Password = editText_Password.getText().toString();
+//                if(isEmptyOrWhiteSpace(Password))
+//                    textView_ErrorPassword.setVisibility(View.VISIBLE);
+//                else {
+//                    textView_ErrorPassword.setVisibility(View.INVISIBLE);
+//                    return;
+//                }
 
-                String Password = editText_Password.getText().toString();
-                if(isEmptyOrWhiteSpace(Password))
-                    textView_ErrorPassword.setVisibility(View.VISIBLE);
-                else {
-                    textView_ErrorPassword.setVisibility(View.INVISIBLE);
-                    return;
-                }
+                Log.d("버튼","test");
 
-                Intent intent=new Intent(activity_login.this,MainFormActivity.class);
-                startActivity(intent);
-                finish();
+                new Thread() {
+                    public void run() {
+// 파라미터 2개와 미리정의해논 콜백함수를 매개변수로 전달하여 호출
+
+
+
+                        ht.requestWebServer("api/user", callback,"");
+                    }
+                }.start();
+                Log.d("버튼","end");
             }
         });
+
+
 
 //        imageView_Close.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -79,4 +105,27 @@ public class activity_login extends AppCompatActivity {
         return s.trim().length() == 0;
     }
 
+    private Callback callback=new Callback(){
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String s=response.body().string();
+
+            Log.d("url",s);
+            try {
+                JSONArray jsonArray=new JSONArray(s);
+
+                JSONObject jsonObject= jsonArray.getJSONObject(0);
+
+                //if(jsonObject.getString("name").compareto("test") intent해서 넘어가라
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }
