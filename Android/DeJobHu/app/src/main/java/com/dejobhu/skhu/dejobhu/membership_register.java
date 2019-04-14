@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -12,7 +13,20 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class membership_register extends AppCompatActivity {
+    public GetJoson getJoson = GetJoson.getInstance();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
@@ -56,49 +70,93 @@ public class membership_register extends AppCompatActivity {
         button_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String Nickname = editText_nickName.getText().toString();
-                if(isEmptyOrWhiteSpace(Nickname))
+                final String Nickname = editText_nickName.getText().toString();
+                boolean isRightInput = true;
+                if(isEmptyOrWhiteSpace(Nickname)) {
                     textView_ErrorNick.setVisibility(View.VISIBLE);
+                    isRightInput = false;
+                }
                 else {
                     textView_ErrorNick.setVisibility(View.INVISIBLE);
-                    if(Nickname.length() < 2 || Nickname.length() > 10)
+                    if(Nickname.length() < 2 || Nickname.length() > 10) {
                         editText_nickName.setError("2-10자로 입력해주세요");
+                        isRightInput = false;
+                    }
                 }
 
-                String Email_ID = editText_Email_ID.getText().toString();
-                if(isEmptyOrWhiteSpace(Email_ID))
+                final String Email_ID = editText_Email_ID.getText().toString();
+                if(isEmptyOrWhiteSpace(Email_ID)) {
                     textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
+                    isRightInput = false;
+                }
                 else {
                     if(Email_ID.contains("@"))
                         textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
-                    else
+                    else {
                         editText_Email_ID.setError("이메일 형식으로 입력해주세요");
-                    //@를 포함했는지 안했는지 추가해야됨
+                        isRightInput = false;
+                    }
+                        //@를 포함했는지 안했는지 추가해야됨
                 }
                 String Password = editText_Password.getText().toString();
-                if(isEmptyOrWhiteSpace(Password))
+                if(isEmptyOrWhiteSpace(Password)) {
                     textView_ErrorPassword.setVisibility(View.VISIBLE);
+                    isRightInput = false;
+                }
                 else {
                     textView_ErrorPassword.setVisibility(View.INVISIBLE);
-                    if(Password.length() < 8 || Password.length() > 20)
+                    if(Password.length() < 8 || Password.length() > 20) {
                         editText_Password.setError("8-20자로 입력해주세요");
+                        isRightInput = false;
+                    }
                 }
 
-                String Password2 = editText_Password2.getText().toString();
-                if(isEmptyOrWhiteSpace(Password2))
+                final String Password2 = editText_Password2.getText().toString();
+                if(isEmptyOrWhiteSpace(Password2)) {
                     textView_ErrorPassword2.setVisibility(View.VISIBLE);
+                    isRightInput = false;
+                }
                 else {
                     textView_ErrorPassword2.setVisibility(View.INVISIBLE);
-                    if(Password != Password2)
+                    if(!Password.equals(Password2)) {
                         editText_Password2.setError("비밀번호와 같지 않습니다");
+                        isRightInput = false;
+                    }
                 }
+                if(isRightInput){
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            getJoson.requestWebServer("api/userStore", callback, Nickname, Email_ID, Password2);
 
+                        }
+                    }.start();
+                }
             }
         });
 
 
     }
 
+    private Callback callback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String s = response.body().string();
+
+            try {
+                Log.d("GOOD", s);
+                JSONObject jsonObject = new JSONObject(s);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
