@@ -129,6 +129,7 @@ public class membership_register extends AppCompatActivity {
                         public void run() {
                             getJoson.requestWebServer("api/userStore", callback, Nickname, Email_ID, Password2);
 
+
                         }
                     }.start();
                 }
@@ -149,7 +150,7 @@ public class membership_register extends AppCompatActivity {
             String s = response.body().string();
 
             try {
-                Log.d("GOOD", s);
+                Log.d("goodInsert", s);
                 JSONObject jsonObject = new JSONObject(s);
 
             } catch (JSONException e) {
