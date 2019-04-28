@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import okhttp3.Response;
 
 public class membership_register extends AppCompatActivity {
     public GetJoson getJoson = GetJoson.getInstance();
+    boolean isValidTest = false;
+    boolean isValidTestEmail = false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
@@ -66,7 +69,45 @@ public class membership_register extends AppCompatActivity {
         final EditText editText_Email_ID = (EditText)findViewById(R.id.editText_Email_ID);
         final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
         final EditText editText_Password2 = (EditText)findViewById(R.id.editText_Password2);
+
+        Button button_valid = (Button)findViewById(R.id.button_valid);
+        Button button_valid_email = (Button)findViewById(R.id.button_valid_email);
         Button button_signUp = (Button)findViewById(R.id.button_signUp);
+
+        button_valid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String nickName = editText_nickName.getText().toString();
+
+                new Thread(){
+                    @Override
+                    public void run(){
+                        getJoson.requestWebServer("api/userValidByName", validCallbackByName, nickName);
+
+                    }
+                }.start();
+
+            }
+        });
+
+        button_valid_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String email = editText_Email_ID.getText().toString();
+                if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    Toast.makeText(getApplicationContext(), "이메일 형식이 올바르지 않습니다.",Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+                new Thread(){
+                    @Override
+                    public void run(){
+                        getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
+
+                    }
+                }.start();
+            }
+        });
+
         button_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +164,10 @@ public class membership_register extends AppCompatActivity {
                         isRightInput = false;
                     }
                 }
+                if(isValidTest == false || isValidTestEmail == false){
+                    isRightInput = false;
+                    Toast.makeText(getApplicationContext(), "중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                }
                 if(isRightInput){
                     new Thread(){
                         @Override
@@ -138,7 +183,90 @@ public class membership_register extends AppCompatActivity {
 
 
     }
+    private Callback validCallbackByName = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
 
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String res = response.body().string();
+            try{
+                Log.d("goodCheck", res);
+                JSONObject jsonObject = new JSONObject(res);
+                if(jsonObject.getString("result").equals("NG")){
+                    membership_register.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Handle UI here
+                            Toast.makeText(getApplicationContext(), "닉네임 중복 체크 완료",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    isValidTest = true;
+                }
+                else{
+                    membership_register.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Handle UI here
+                            Toast.makeText(getApplicationContext(), "닉네임이 중복됩니다. 다시 입력해 주세요.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    isValidTest = false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    };
+    private Callback validCallbackByEmail = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String res = response.body().string();
+            try{
+                Log.d("goodCheck", res);
+                JSONObject jsonObject = new JSONObject(res);
+                if(jsonObject.getString("result").equals("NG")){
+                    membership_register.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Handle UI here
+                            Toast.makeText(getApplicationContext(), "이메일 중복 체크 완료",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    isValidTestEmail = true;
+                }
+                else{
+                    membership_register.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Handle UI here
+                            Toast.makeText(getApplicationContext(), "이메일이 중복됩니다. 다시 입력해 주세요.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    isValidTestEmail = false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    };
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
