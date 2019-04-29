@@ -1,9 +1,13 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
@@ -30,6 +34,7 @@ public class membership_register extends AppCompatActivity {
     public GetJoson getJoson = GetJoson.getInstance();
     boolean isValidTest = false;
     boolean isValidTestEmail = false;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
@@ -74,6 +79,39 @@ public class membership_register extends AppCompatActivity {
         Button button_valid_email = (Button)findViewById(R.id.button_valid_email);
         Button button_signUp = (Button)findViewById(R.id.button_signUp);
 
+        editText_Email_ID.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isValidTestEmail = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        editText_nickName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isValidTest = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         button_valid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,19 +202,19 @@ public class membership_register extends AppCompatActivity {
                         isRightInput = false;
                     }
                 }
-                if(isValidTest == false || isValidTestEmail == false){
-                    isRightInput = false;
-                    Toast.makeText(getApplicationContext(), "중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
-                }
+
                 if(isRightInput){
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            getJoson.requestWebServer("api/userStore", callback, Nickname, Email_ID, Password2);
-
-
-                        }
-                    }.start();
+                    if(isValidTest == false || isValidTestEmail == false){
+                        Toast.makeText(getApplicationContext(), "중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                getJoson.requestWebServer("api/userStore", callback, Nickname, Email_ID, Password2);
+                            }
+                        }.start();
+                    }
                 }
             }
         });
@@ -191,28 +229,35 @@ public class membership_register extends AppCompatActivity {
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+
             String res = response.body().string();
             try{
                 Log.d("goodCheck", res);
                 JSONObject jsonObject = new JSONObject(res);
+
                 if(jsonObject.getString("result").equals("NG")){
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("nickInValid", "닉네임 중복체크 완료.");
                             //Handle UI here
-                            Toast.makeText(getApplicationContext(), "닉네임 중복 체크 완료",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "닉네임 중복 체크 완료",
+//                                    Toast.LENGTH_LONG).show();
+                            showMessage("닉네임 중복체크 완료.");
+                            isValidTest = true;
                         }
                     });
-                    isValidTest = true;
+
                 }
                 else{
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("nickValid", "닉네임 중복됩니다.");
                             //Handle UI here
-                            Toast.makeText(getApplicationContext(), "닉네임이 중복됩니다. 다시 입력해 주세요.",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "닉네임이 중복됩니다. 다시 입력해 주세요.",
+//                                    Toast.LENGTH_LONG).show();
+                            showMessage("닉네임이 중복됩니다.");
                         }
                     });
                     isValidTest = false;
@@ -233,6 +278,7 @@ public class membership_register extends AppCompatActivity {
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
+
             String res = response.body().string();
             try{
                 Log.d("goodCheck", res);
@@ -241,9 +287,11 @@ public class membership_register extends AppCompatActivity {
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("emailInValid", "이메일 중복체크 완료");
                             //Handle UI here
-                            Toast.makeText(getApplicationContext(), "이메일 중복 체크 완료",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "이메일 중복 체크 완료",
+//                                    Toast.LENGTH_LONG).show();
+                            showMessage("이메일 중복체크 완료");
                         }
                     });
                     isValidTestEmail = true;
@@ -252,9 +300,12 @@ public class membership_register extends AppCompatActivity {
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("emailValid", "이메일 중복됩니다.");
                             //Handle UI here
-                            Toast.makeText(getApplicationContext(), "이메일이 중복됩니다. 다시 입력해 주세요.",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "이메일이 중복됩니다. 다시 입력해 주세요.",
+//                                    Toast.LENGTH_LONG).show();
+                            showMessage("이메일이 중복됩니다.");
+
                         }
                     });
                     isValidTestEmail = false;
@@ -267,6 +318,23 @@ public class membership_register extends AppCompatActivity {
 
         }
     };
+    public void showMessage(String message){
+        AlertDialog alertDialog;
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("알림");
+        alertBuilder.setMessage(message);
+        alertBuilder.setPositiveButton("예", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("YES", "예 버튼이 눌렸습니다.");
+            }
+        });
+
+        alertDialog = alertBuilder.create();
+        alertDialog.show();
+    }
+
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
