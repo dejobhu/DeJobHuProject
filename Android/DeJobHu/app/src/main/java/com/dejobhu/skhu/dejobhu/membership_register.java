@@ -1,6 +1,7 @@
 package com.dejobhu.skhu.dejobhu;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -79,6 +80,7 @@ public class membership_register extends AppCompatActivity {
         Button button_valid_email = (Button)findViewById(R.id.button_valid_email);
         Button button_signUp = (Button)findViewById(R.id.button_signUp);
 
+        //중간에 입력값이 바뀌면 중복체크를 다시해야 하기 때문임
         editText_Email_ID.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -96,6 +98,8 @@ public class membership_register extends AppCompatActivity {
             }
         });
 
+
+        //중간에 입력값이 바뀌면 중복체크를 다시해야 하기 때문임
         editText_nickName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -112,40 +116,54 @@ public class membership_register extends AppCompatActivity {
 
             }
         });
+
+        //닉네임 중복체크버튼 구현
         button_valid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String nickName = editText_nickName.getText().toString();
+                if(nickName.equals("")){
+                    showMessage("닉네임을 입력해 주세요.");
+                }
+                else {
 
-                new Thread(){
-                    @Override
-                    public void run(){
-                        getJoson.requestWebServer("api/userValidByName", validCallbackByName, nickName);
 
-                    }
-                }.start();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            getJoson.requestWebServer("api/userValidByName", validCallbackByName, nickName);
 
+                        }
+                    }.start();
+                }
             }
         });
 
+        //이메일 중복체크버튼 구현
         button_valid_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String email = editText_Email_ID.getText().toString();
-                if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                    Toast.makeText(getApplicationContext(), "이메일 형식이 올바르지 않습니다.",Toast.LENGTH_SHORT).show();
-                    return ;
+                if(email.equals("")){
+                    showMessage("이메일을 입력해 주세요");
                 }
-                new Thread(){
-                    @Override
-                    public void run(){
-                        getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
-
+                else {
+                    if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        Toast.makeText(getApplicationContext(), "이메일 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                }.start();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
+
+                        }
+                    }.start();
+                }
             }
         });
 
+        //회원가입 버튼 구현
         button_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +230,7 @@ public class membership_register extends AppCompatActivity {
                             @Override
                             public void run() {
                                 getJoson.requestWebServer("api/userStore", callback, Nickname, Email_ID, Password2);
+
                             }
                         }.start();
                     }
@@ -221,6 +240,8 @@ public class membership_register extends AppCompatActivity {
 
 
     }
+
+    //닉네임 중복확인 requestWebServer에 대한 콜백함수
     private Callback validCallbackByName = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -270,6 +291,8 @@ public class membership_register extends AppCompatActivity {
 
         }
     };
+
+    //이메일 중복확인 requestWebServer 함수에 대한 콜백함수
     private Callback validCallbackByEmail = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -282,7 +305,8 @@ public class membership_register extends AppCompatActivity {
             String res = response.body().string();
             try{
                 Log.d("goodCheck", res);
-                JSONObject jsonObject = new JSONObject(res);
+                JSONObject jsonObject = new JSONObject(res); //한줄이니까 JSONObject로 받음. 만약 배열이면 JSONArray로
+                //받은 결과값이 NG이면
                 if(jsonObject.getString("result").equals("NG")){
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
@@ -296,6 +320,7 @@ public class membership_register extends AppCompatActivity {
                     });
                     isValidTestEmail = true;
                 }
+                //받은결과가 NG가 아닐경우
                 else{
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
@@ -348,6 +373,17 @@ public class membership_register extends AppCompatActivity {
             try {
                 Log.d("goodInsert", s);
                 JSONObject jsonObject = new JSONObject(s);
+                final String nickName = jsonObject.getString("name");
+
+                membership_register.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(membership_register.this, "환영합니다" + nickName + "님", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                Intent intent = new Intent(membership_register.this, MainFormActivity.class);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
