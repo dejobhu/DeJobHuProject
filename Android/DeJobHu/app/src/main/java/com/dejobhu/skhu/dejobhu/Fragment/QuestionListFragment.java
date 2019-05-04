@@ -32,16 +32,26 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Question;
 import com.dejobhu.skhu.dejobhu.R;
+import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 import com.dejobhu.skhu.dejobhu.SlideExpload;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -51,10 +61,15 @@ public class QuestionListFragment extends Fragment {
     private final Long TRASITION_DURATION=1000L;
     private final String TAP_POSTION="tap_position";
 
+    int page=1;
+    int lastpage=1;
     private  int tapPosition=NO_POSITION;
     Rect viewRect=new Rect();
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
+    ArrayList<Question> arrayList= new ArrayList<Question>();
+
+
 
     ProgressBar progressBar;
     @Nullable
@@ -102,27 +117,20 @@ public class QuestionListFragment extends Fragment {
         if(state instanceof State.InProgress){
             recyclerView.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
+            new Thread(){
+                @Override
+                public void run() {
+                    GetJoson joson=GetJoson.getInstance();
+                    joson.PageRequest("api/post/all",callback,"page="+page);
+                }
+            }.run();
             startPostponedEnterTransition();
         }else {
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-            ArrayList<Question> arrayList= new ArrayList<Question>();
-
 
             //현재 body 기준으로 갈라짐
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때1","2019-02-05",null));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때2","2019-02-05",null));
-            arrayList.add(new Question("장희승","(속보)집 언제가3","2019-02-05",null));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨4","2019-02-05",null));
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때5","2019-02-05",null));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때6","2019-02-05",null));
-            arrayList.add(new Question("장희승","(속보)집 언제가7","2019-02-05",null));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨8","2019-02-05",null));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨9","2019-02-05",null));
-            arrayList.add(new Question("임수현","(속보)프젝 2개 어때10","2019-02-05",null));
-            arrayList.add(new Question("양민욱","(속보)소프 프젝어때11","2019-02-05",null));
-            arrayList.add(new Question("장희승","(속보)집 언제가12","2019-02-05",null));
-            arrayList.add(new Question("김남수","(속보)IOS 이쁨13","2019-02-05",null));
+
             ((QuestionAdapter)adapter).setData(arrayList);
             getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
@@ -154,6 +162,57 @@ public class QuestionListFragment extends Fragment {
             startPostponedEnterTransition();
         }
     }
+
+    private Callback callback=new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String s= response.body().string();
+            try {
+                JSONObject object=new JSONObject(s);
+                if(object.getInt("result")==2000)
+                {
+                    JSONObject data=object.getJSONObject("data");
+                    JSONArray array=data.getJSONArray("data");
+                    lastpage=data.getInt("last_page");
+
+                    for(int i=0;i<array.length();i++)
+                    {
+                        JSONObject value=array.getJSONObject(i);
+                        arrayList.add(new Question(value.getString("user_name"),value.getString("title"),value.getString("created_at"),null));
+
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"게시글을 불러왔습니다",Toast.LENGTH_LONG).show();
+                            adapter.notifyDataSetChanged();
+                        }});
+                }else
+                {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"서버통신이 실패했습니다. 관리자에게 문의주세요",Toast.LENGTH_LONG).show();
+                        }});
+
+                }
+
+            } catch (JSONException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(),"서버통신이 실패했습니다. 관리자에게 문의주세요",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+        }
+    };
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
