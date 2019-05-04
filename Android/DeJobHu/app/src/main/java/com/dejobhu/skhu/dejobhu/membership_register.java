@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +36,8 @@ public class membership_register extends AppCompatActivity {
     public GetJoson getJoson = GetJoson.getInstance();
     boolean isValidTest = false;
     boolean isValidTestEmail = false;
-
+    boolean isAuthEmail = false;
+    private static final int authAct = 101;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
@@ -156,6 +158,9 @@ public class membership_register extends AppCompatActivity {
                         @Override
                         public void run() {
                             getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
+                            if(isValidTestEmail == true){
+                                towardToAuthEmail();
+                            }
 
                         }
                     }.start();
@@ -182,19 +187,19 @@ public class membership_register extends AppCompatActivity {
                 }
 
                 final String Email_ID = editText_Email_ID.getText().toString();
-                if(isEmptyOrWhiteSpace(Email_ID)) {
-                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
-                    isRightInput = false;
-                }
-                else {
-                    if(Email_ID.contains("@"))
-                        textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
-                    else {
-                        editText_Email_ID.setError("이메일 형식으로 입력해주세요");
-                        isRightInput = false;
-                    }
-                        //@를 포함했는지 안했는지 추가해야됨
-                }
+//                if(isEmptyOrWhiteSpace(Email_ID)) {
+//                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
+//                    isRightInput = false;
+//                }
+//                else {
+//                    if(Email_ID.contains("@"))
+//                        textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
+//                    else {
+//                        editText_Email_ID.setError("이메일 형식으로 입력해주세요");
+//                        isRightInput = false;
+//                    }
+//                        //@를 포함했는지 안했는지 추가해야됨
+//                }
                 String Password = editText_Password.getText().toString();
                 if(isEmptyOrWhiteSpace(Password)) {
                     textView_ErrorPassword.setVisibility(View.VISIBLE);
@@ -222,10 +227,15 @@ public class membership_register extends AppCompatActivity {
                 }
 
                 if(isRightInput){
-                    if(isValidTest == false || isValidTestEmail == false){
-                        Toast.makeText(getApplicationContext(), "중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                    if(isValidTest == false || isAuthEmail == false){
+                        if(isValidTest == false)
+                            Toast.makeText(getApplicationContext(), "중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                        if(isAuthEmail == false)
+                            Toast.makeText(getApplicationContext(), "이메일 인증을 해주세요.", Toast.LENGTH_SHORT).show();
+
                     }
                     else {
+
                         new Thread() {
                             @Override
                             public void run() {
@@ -291,9 +301,20 @@ public class membership_register extends AppCompatActivity {
 
         }
     };
+    //이메일 인증 Activity에서 날아온 Intent를 분석하기 위한 함수
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if(data.getStringExtra("Success").equals("true"))
+                isAuthEmail = true;
+        }
+
+    }
 
     //이메일 중복확인 requestWebServer 함수에 대한 콜백함수
-    private Callback validCallbackByEmail = new Callback() {
+   private Callback validCallbackByEmail = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
 
@@ -315,10 +336,13 @@ public class membership_register extends AppCompatActivity {
                             //Handle UI here
 //                            Toast.makeText(getApplicationContext(), "이메일 중복 체크 완료",
 //                                    Toast.LENGTH_LONG).show();
-                            showMessage("이메일 중복체크 완료");
+//                            showMessage("이메일 중복체크 완료");
                         }
                     });
                     isValidTestEmail = true;
+
+
+
                 }
                 //받은결과가 NG가 아닐경우
                 else{
@@ -383,13 +407,20 @@ public class membership_register extends AppCompatActivity {
                 });
 
                 Intent intent = new Intent(membership_register.this, MainFormActivity.class);
+//계정 세션으로 넘겨주는 것 구현해야함
 
+                startActivity(intent);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     };
+    public void towardToAuthEmail(){
+        Intent intent = new Intent(getApplicationContext(), EmailAuthActivity.class);
+        startActivityForResult(intent, authAct);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
