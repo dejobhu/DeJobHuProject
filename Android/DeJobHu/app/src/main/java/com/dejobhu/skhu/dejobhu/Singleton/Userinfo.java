@@ -1,15 +1,20 @@
 package com.dejobhu.skhu.dejobhu.Singleton;
 
 public class Userinfo {
-    String id;
+
+    public static Userinfo shared=new Userinfo();
+    private  Userinfo(){
+
+    }
+    int id;
     String name;
     String email;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

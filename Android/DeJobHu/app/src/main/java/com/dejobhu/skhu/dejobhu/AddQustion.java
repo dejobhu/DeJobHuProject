@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
+import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
 import com.github.akshay_naik.texthighlighterapi.TextHighlighter;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.HamButton;
@@ -156,7 +157,7 @@ public class AddQustion extends AppCompatActivity {
                         GetJoson joson=GetJoson.getInstance();
 
                         HashMap<String,String> hash=new HashMap<>();
-                        hash.put("id","22");
+                        hash.put("id",""+ Userinfo.shared.getId());
                         hash.put("title",title.getText().toString());
                         hash.put("text0",content.getText().toString());
                         hash.put("last",""+keyArrayList.size()+1);

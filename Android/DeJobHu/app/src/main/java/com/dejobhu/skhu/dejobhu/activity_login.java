@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
+import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,6 +130,16 @@ public class activity_login extends AppCompatActivity {
                 //만약 result가 NG가 아닌 다른 것이 나온다면 화면전환을 해준다.
                 //jsonObject를 이용한 사용자 정보 추출 구현해야함
                 else{
+
+                    JSONObject data=jsonObject.getJSONObject("data");
+                    JSONObject user=data.getJSONObject("1");
+                    Userinfo userinfo=Userinfo.shared;
+
+                    userinfo.setId(user.getInt("id"));
+                    userinfo.setEmail(user.getString("email"));
+                    userinfo.setName(user.getString("name"));
+
+
 
                     Intent intent = new Intent(getApplicationContext(), MainFormActivity.class);
                     startActivity(intent);

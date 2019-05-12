@@ -183,7 +183,7 @@ public class QuestionListFragment extends Fragment {
                     for(int i=0;i<array.length();i++)
                     {
                         JSONObject value=array.getJSONObject(i);
-                        arrayList.add(new Question(value.getString("user_name"),value.getString("title"),value.getString("created_at"),null));
+                        arrayList.add(new Question(value.getInt("id"),value.getString("user_name"),value.getString("title"),value.getString("created_at"),null));
 
                     }
                     getActivity().runOnUiThread(new Runnable() {
@@ -237,7 +237,7 @@ public class QuestionListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder( QuestionViewHolder holder,  int position) {
+        public void onBindViewHolder(QuestionViewHolder holder, final int position) {
 
             final int p=position;
             final QuestionViewHolder holder1=holder;
@@ -263,7 +263,7 @@ public class QuestionListFragment extends Fragment {
                     sharedElementTransition.setDuration(TRASITION_DURATION);
                     sharedElementTransition.setInterpolator(transition);
 
-                    Fragment fragment = new QuestionDetails();
+                    Fragment fragment = new QuestionDetails(arrayList.get(p).GetId());
                     fragment.setSharedElementEnterTransition(sharedElementTransition);
                     fragment.setSharedElementReturnTransition(sharedElementTransition);
 

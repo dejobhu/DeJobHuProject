@@ -31,6 +31,7 @@ public class GetJoson{
     public void requestWebServer(String php, Callback callback, String ... params){
         //Get방식
         String realURL = URL + php+"/";
+
         if(params.length != 0) {
             for (int i = 0; i < params.length; i++) {
                 if(i!=0)
@@ -39,10 +40,13 @@ public class GetJoson{
 
             }
         }
+        Log.d("url",realURL);
     Request request = new Request.Builder().url(realURL).build();
         if(request != null)
         client.newCall(request).enqueue(callback);
     }
+
+
     public void PageRequest(String PHP, Callback callback, String page) {
         String url = URL+PHP+"?"+page;
 

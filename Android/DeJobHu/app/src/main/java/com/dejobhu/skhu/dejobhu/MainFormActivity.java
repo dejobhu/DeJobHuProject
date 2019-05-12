@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Fragment.QuestionListFragment;
+import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
 
 import java.util.ArrayList;
 
@@ -89,6 +90,10 @@ public class MainFormActivity extends AppCompatActivity
                     .commit();
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View view=navigationView.getHeaderView(0);
+
+        ((TextView)view.findViewById(R.id.nav_header_name)).setText(Userinfo.shared.getName()); //Drawable 사용자 이름 변경
 
 
         // 별점 받아오기 , 프로필 받아오기, 회원등급 받아오기
