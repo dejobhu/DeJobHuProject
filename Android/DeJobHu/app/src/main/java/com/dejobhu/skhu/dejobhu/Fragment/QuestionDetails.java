@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.dejobhu.skhu.dejobhu.R;
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
+import com.dejobhu.skhu.dejobhu.adapters.CommentAdapter;
+import com.dejobhu.skhu.dejobhu.models.CommentItem;
 import com.dejobhu.skhu.dejobhu.models.ItemImage;
 import com.dejobhu.skhu.dejobhu.models.ItemText;
 
@@ -44,6 +48,9 @@ public class QuestionDetails extends Fragment {
     LinearLayout linearLayout;
     ProgressBar progressBar;
     int post_id;
+    RecyclerView recyclerView;
+    CommentAdapter adapter;
+    ArrayList<CommentItem> arrayListComment=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,9 +66,10 @@ public class QuestionDetails extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView=view.findViewById(R.id.recyclerView);
         progressBar=view.findViewById(R.id.progressBar);
         linearLayout=view.findViewById(R.id.detail_content);
-
+        recyclerView=view.findViewById(R.id.detail_recycle);
         linearLayout.setAlpha(0f);
 
         ObjectAnimator animator= ObjectAnimator.ofFloat(linearLayout,View.ALPHA,0f,1f);
@@ -82,8 +90,11 @@ public class QuestionDetails extends Fragment {
             }
         }.run();
 
+        adapter=new CommentAdapter(getActivity(),arrayListComment);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
 
-
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     private Callback callback=new Callback() {
@@ -153,6 +164,8 @@ public class QuestionDetails extends Fragment {
             }
         }
     };
+
+
 
     public void getPost(){
         int textIndex=0;

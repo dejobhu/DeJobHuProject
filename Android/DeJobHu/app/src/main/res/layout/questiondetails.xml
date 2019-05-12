@@ -14,6 +14,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/detail_content"
         android:layout_width="match_parent"
@@ -33,7 +36,52 @@
             tools:ignore="HardcodedText"/>
 
 
+
+
     </LinearLayout>
 
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_content"
+                android:padding="16dp"
+                android:id="@+id/add_comment">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add_comment_btn"
+                    android:layout_alignParentRight="true"
+                    android:text="올리기"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/add_comment_centerVIew"
+                    android:layout_toLeftOf="@id/add_comment_btn"></View>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/add_comment_centerVIew"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/add_comment_edit"/>
+
+
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/detail_recycle"
+                android:layout_below="@id/add_comment"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
     </ScrollView>
+
 </FrameLayout>
