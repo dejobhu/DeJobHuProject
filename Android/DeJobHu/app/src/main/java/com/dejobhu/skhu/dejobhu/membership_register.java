@@ -243,6 +243,7 @@ public class membership_register extends AppCompatActivity {
 
                             }
                         }.start();
+                        goToMain(Nickname);
                     }
                 }
             }
@@ -399,17 +400,23 @@ public class membership_register extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(s);
                 final String nickName = jsonObject.getString("name");
 
-                membership_register.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(membership_register.this, "환영합니다" + nickName + "님", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                membership_register.this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(membership_register.this, "환영합니다" + nickName + "님", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                membership_register.this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Intent intent = new Intent(membership_register.this, MainFormActivity.class);
+////계정 세션으로 넘겨주는 것 구현해야함
+//
+//                        startActivity(intent);
+//                    }
+//                });
 
-                Intent intent = new Intent(membership_register.this, MainFormActivity.class);
-//계정 세션으로 넘겨주는 것 구현해야함
-
-                startActivity(intent);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -419,6 +426,14 @@ public class membership_register extends AppCompatActivity {
     public void towardToAuthEmail(){
         Intent intent = new Intent(getApplicationContext(), EmailAuthActivity.class);
         startActivityForResult(intent, authAct);
+    }
+
+    public void goToMain(String nickName){
+
+        Toast.makeText(membership_register.this, "환영합니다" + nickName + "님", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(membership_register.this, MainFormActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
