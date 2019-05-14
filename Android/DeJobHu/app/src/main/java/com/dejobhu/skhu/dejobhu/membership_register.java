@@ -267,7 +267,7 @@ public class membership_register extends AppCompatActivity {
                 Log.d("goodCheck", res);
                 JSONObject jsonObject = new JSONObject(res);
 
-                if(jsonObject.getString("result").equals("NG")){
+                if(jsonObject.getString("result").equals("NG")) {
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -281,6 +281,7 @@ public class membership_register extends AppCompatActivity {
                     });
 
                 }
+
                 else{
                     membership_register.this.runOnUiThread(new Runnable() {
                         @Override

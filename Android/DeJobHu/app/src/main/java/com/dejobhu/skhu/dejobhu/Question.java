@@ -11,14 +11,17 @@ public class Question {
     String body;
     String timestep;
     Bitmap image;
+    int id;
 
-    public Question(String ID,String body,String time,Bitmap bitmap){
+    public Question(int id,String ID,String body,String time,Bitmap bitmap){
+        this.id=id;
         name=ID;
         this.body=body;
         this.timestep=time;
         this.image=bitmap;
     }
 
+    public int GetId(){return id;}
     public Bitmap getImage() {
         return image;
     }

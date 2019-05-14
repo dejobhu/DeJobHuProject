@@ -32,7 +32,7 @@ public class EmailAuthActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!isOnceClicked) {
-                    timeGoes(10);
+                    timeGoes(300);
                     isOnceClicked = true;
                     Random random = new Random();
                     authPass = random.nextInt(900000) + 100000;

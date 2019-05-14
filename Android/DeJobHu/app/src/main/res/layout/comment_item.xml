@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_stroke"
+    android:padding="16sp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="noname"
+        android:id="@+id/comment_name"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2019.04.09"
+        android:id="@+id/comment_time"
+        android:layout_alignTop="@id/comment_name"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/comment_content"
+        android:text="comment test"
+        android:layout_below="@id/comment_name"
+        android:textSize="19sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="11dp"/>
+</RelativeLayout>

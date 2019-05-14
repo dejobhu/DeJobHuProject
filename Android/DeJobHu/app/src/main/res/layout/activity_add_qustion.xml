@@ -74,6 +74,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:gravity="top"
+                android:id="@+id/question_first_content"
                 android:background="@null"
                 android:layout_marginHorizontal="20dp"
                 android:hint="본문"/>

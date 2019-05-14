@@ -5,10 +5,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:transitionName="@string/transition_name">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
     <LinearLayout
-        android:id="@+id/content"
+        android:id="@+id/detail_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
@@ -17,18 +30,58 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="16dp"
+            android:id="@+id/question_detail_title"
             android:text="Email Title"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:ignore="HardcodedText"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="40dp"
-            android:text="Example email details"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            tools:ignore="HardcodedText"/>
+
+
 
     </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_content"
+                android:padding="16dp"
+                android:id="@+id/add_comment">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add_comment_btn"
+                    android:layout_alignParentRight="true"
+                    android:text="올리기"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:id="@+id/add_comment_centerVIew"
+                    android:layout_toLeftOf="@id/add_comment_btn"></View>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/add_comment_centerVIew"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/add_comment_edit"/>
+
+
+
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/detail_recycle"
+                android:layout_below="@id/add_comment"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+    </ScrollView>
+
 </FrameLayout>
