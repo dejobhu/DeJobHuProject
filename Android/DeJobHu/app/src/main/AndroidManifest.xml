@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EmailAuthActivity"></activity>
+        <activity android:name=".FindPassword"></activity>
+        <activity android:name=".EmailAuthActivity" />
         <activity android:name=".ConfirmEmail" />
         <activity android:name=".AddQustion" />
         <activity android:name=".activity_login">
@@ -29,10 +30,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".membership_register" />
         <activity android:name=".MainFormActivity" />
-
         <activity android:name=".list_MainActivity" />
-
-
     </application>
 
 </manifest>

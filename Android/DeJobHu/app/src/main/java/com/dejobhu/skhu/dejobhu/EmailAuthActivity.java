@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,12 +23,15 @@ public class EmailAuthActivity extends AppCompatActivity {
     boolean isOnceClicked = false;
     int authPass;
     int count;
+    GetJoson getJoson = GetJoson.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_auth);
 
-
+        Intent intent = getIntent(); // membership_register로부터 넘어온 인텐트 값 수신
+        final String passedEmail = intent.getStringExtra("email");
+//        Log.d("넘어온 이메일 : ", passedEmail);
         final Button authButton = (Button)findViewById(R.id.authButton);
         authButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +43,8 @@ public class EmailAuthActivity extends AppCompatActivity {
                     authPass = random.nextInt(900000) + 100000;
                     Log.d("인증번호 : " , "" + authPass);
 
+//                    getJoson.requestWebServer("api/sendMail", mailCallback, passedEmail, authPass);
+//                    TODO: 이메일을 PHP단에 전송하여 메일 인증 시스템 구현하기.
                 }
             }
         });
@@ -67,6 +74,8 @@ public class EmailAuthActivity extends AppCompatActivity {
         });
 
     }
+
+
     public String expressTime(int time){
         int minute = time / 60;
         int second = time % 60;

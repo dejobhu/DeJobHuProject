@@ -71,7 +71,7 @@
         android:textSize="17sp"
         android:layout_marginRight="8dp"
         android:singleLine="true"
-        android:text="@string/findID"
+        android:text="비밀번호 찾기"
         android:fontFamily="@font/nanumbarungothic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

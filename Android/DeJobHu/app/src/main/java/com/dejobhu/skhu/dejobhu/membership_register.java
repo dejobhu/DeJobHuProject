@@ -159,7 +159,7 @@ public class membership_register extends AppCompatActivity {
                         public void run() {
                             getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
                             if(isValidTestEmail == true){
-                                towardToAuthEmail();
+                                towardToAuthEmail(email);
                             }
 
                         }
@@ -424,8 +424,9 @@ public class membership_register extends AppCompatActivity {
             }
         }
     };
-    public void towardToAuthEmail(){
+    public void towardToAuthEmail(String email){
         Intent intent = new Intent(getApplicationContext(), EmailAuthActivity.class);
+        intent.putExtra("email", email);
         startActivityForResult(intent, authAct);
     }
 
