@@ -42,7 +42,7 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
                 inputEmail = (EditText)findViewById(R.id.emailText);
                 String email = inputEmail.getText().toString();
                 if(inputEmail != null) {
-                    if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
+                    if(Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
                         if (!isOnceClicked) {
                             timeGoes(300);
                             isOnceClicked = true;

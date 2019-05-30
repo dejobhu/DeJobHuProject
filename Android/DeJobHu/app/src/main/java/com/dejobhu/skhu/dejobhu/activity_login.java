@@ -33,12 +33,22 @@ public class activity_login extends AppCompatActivity {
 
         TextView textView_findId = (TextView)findViewById(R.id.textView_findID);
         TextView textView_membership = (TextView)findViewById(R.id.textView_membership);
+
         final TextView textView_ErrorEmail_ID = (TextView)findViewById(R.id.textView_ErrorEmail_ID);
         final TextView textView_ErrorPassword = (TextView)findViewById(R.id.textView_ErrorPass);
+        TextView textView_findID = (TextView)findViewById(R.id.textView_findID);
         final EditText editText_Email_ID = (EditText)findViewById(R.id.editText_Email_ID);
         final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
         Button button_login = (Button)findViewById(R.id.button_login);
 
+        // 비밀번호 찾기
+        textView_findID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EmailAuthToFindPWD.class);
+                startActivity(intent);
+            }
+        });
 
         textView_membership.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +96,7 @@ public class activity_login extends AppCompatActivity {
 //            }
 //        });
 
-        SpannableString content1 = new SpannableString("아이디/비밀번호 찾기");
+        SpannableString content1 = new SpannableString("비밀번호 찾기");
         content1.setSpan(new UnderlineSpan(), 0, textView_findId.length(), 0);
         textView_findId.setText(content1);
 
