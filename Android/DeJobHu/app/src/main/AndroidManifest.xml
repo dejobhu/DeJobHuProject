@@ -4,6 +4,15 @@
     package="com.dejobhu.skhu.dejobhu">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+
+    <!-- network 상태를 미리 체크하여 연결 안된 경우 다이얼로그를 보여주려면 아래 permission 추가 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- android test 돌릴 때 화면 lock 풀어야 로그인 touch 가능 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,6 +37,16 @@
         <activity android:name=".MainFormActivity" />
 
         <activity android:name=".list_MainActivity" />
+        <activity android:name=".loginActivity" />
+
+        <!-- [naveroauthlogin][start] 네이버아이디로로그인을 사용하기 위해서 넣어줘야하는 부분 -->
+        <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
+            tools:replace="android:theme" />
+        <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginInAppBrowserActivity"
+            android:label="OAuth2.0 In-app"/>
+        <!-- [naveroauthlogin][end] -->
+
 
     </application>
 

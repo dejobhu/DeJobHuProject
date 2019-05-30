@@ -1,18 +1,24 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
+import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,9 +32,33 @@ import okhttp3.Response;
 
 public class activity_login extends AppCompatActivity {
     GetJoson getJoson = GetJoson.getInstance();
+    //네이버 client 정보
+    private static final String TAG = "OAuthSampleActivity";
+    private static String OAUTH_CLIENT_ID = "TQP9iDx2BHY61vQBAJBf";
+    private static String OAUTH_CLIENT_SECRET = "bjxWk80DV3";
+    private static String OAUTH_CLIENT_NAME = "네이버 아이디로 로그인 테스트";
+    private static OAuthLogin mOAuthLoginInstance;
+    private static Context mContext;
+    private OAuthLoginButton mOAuthLoginButton;
+    /**
+     * UI 요소들
+     */
+    private TextView mApiResultText;
+    private static TextView mOauthAT;
+    private static TextView mOauthRT;
+    private static TextView mOauthExpires;
+    private static TextView mOauthTokenType;
+    private static TextView mOAuthState;
+
+  //  private OAuthLoginButton mOAuthLoginButton;
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mContext = this;
+
+
+        initData();
 
         TextView textView_findId = (TextView)findViewById(R.id.textView_findID);
         TextView textView_membership = (TextView)findViewById(R.id.textView_membership);
@@ -38,6 +68,10 @@ public class activity_login extends AppCompatActivity {
         final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
         Button button_login = (Button)findViewById(R.id.button_login);
 
+
+
+        mOAuthLoginButton = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
+        mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler);
 
         textView_membership.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +126,115 @@ public class activity_login extends AppCompatActivity {
         SpannableString content2 = new SpannableString("회원가입");
         content2.setSpan(new UnderlineSpan(), 0, textView_membership.length(), 0);
         textView_membership.setText(content2);
+    }
+
+      private void initData() {
+        mOAuthLoginInstance = OAuthLogin.getInstance();
+
+        mOAuthLoginInstance.showDevelopersLog(true);
+        mOAuthLoginInstance.init(mContext, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);
+
+        /*
+         * 2015년 8월 이전에 등록하고 앱 정보 갱신을 안한 경우 기존에 설정해준 callback intent url 을 넣어줘야 로그인하는데 문제가 안생긴다.
+         * 2015년 8월 이후에 등록했거나 그 뒤에 앱 정보 갱신을 하면서 package name 을 넣어준 경우 callback intent url 을 생략해도 된다.
+         */
+        //mOAuthLoginInstance.init(mContext, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME, OAUTH_callback_intent_url);
+    }
+
+    private void initView() {
+        mApiResultText = (TextView) findViewById(R.id.api_result_text);
+
+        mOauthAT = (TextView) findViewById(R.id.oauth_access_token);
+        mOauthRT = (TextView) findViewById(R.id.oauth_refresh_token);
+        mOauthExpires = (TextView) findViewById(R.id.oauth_expires);
+        mOauthTokenType = (TextView) findViewById(R.id.oauth_type);
+        mOAuthState = (TextView) findViewById(R.id.oauth_state);
+
+        mOAuthLoginButton = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
+        mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler);
+        updateView();
+    }
+    private void updateView() {
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        super.onResume();
+
+    }
+
+    /**
+     * startOAuthLoginActivity() 호출시 인자로 넘기거나, OAuthLoginButton 에 등록해주면 인증이 종료되는 걸 알 수 있다.
+     */
+    static private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
+        @Override
+        public void run(boolean success) {
+            if (success) {
+                String accessToken = mOAuthLoginInstance.getAccessToken(mContext);
+                String refreshToken = mOAuthLoginInstance.getRefreshToken(mContext);
+                long expiresAt = mOAuthLoginInstance.getExpiresAt(mContext);
+                String tokenType = mOAuthLoginInstance.getTokenType(mContext);
+
+            } else {
+                String errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).getCode();
+                String errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext);
+                Toast.makeText(mContext, "errorCode:" + errorCode + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    };
+
+    public void onButtonClick(View v) throws Throwable {
+
+        switch (v.getId()) {
+            case R.id.buttonOAuth: {
+                mOAuthLoginInstance.startOauthLoginActivity(activity_login.this, mOAuthLoginHandler);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+
+    private class DeleteTokenTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            boolean isSuccessDeleteToken = mOAuthLoginInstance.logoutAndDeleteToken(mContext);
+
+            if (!isSuccessDeleteToken) {
+                // 서버에서 token 삭제에 실패했어도 클라이언트에 있는 token 은 삭제되어 로그아웃된 상태이다
+                // 실패했어도 클라이언트 상에 token 정보가 없기 때문에 추가적으로 해줄 수 있는 것은 없음
+                Log.d(TAG, "errorCode:" + mOAuthLoginInstance.getLastErrorCode(mContext));
+                Log.d(TAG, "errorDesc:" + mOAuthLoginInstance.getLastErrorDesc(mContext));
+            }
+
+            return null;
+        }
+
+
+    }
+
+
+
+    private class RefreshTokenTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            mApiResultText.setText((String) "");
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            return mOAuthLoginInstance.refreshAccessToken(mContext);
+        }
+
+        protected void onPostExecute(String content) {
+            mApiResultText.setText((String) content);
+        }
+
     }
 
     static boolean isEmptyOrWhiteSpace(String s){
