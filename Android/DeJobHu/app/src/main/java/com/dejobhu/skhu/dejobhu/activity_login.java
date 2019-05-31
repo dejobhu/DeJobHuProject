@@ -16,13 +16,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
-<<<<<<< HEAD
+
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
-=======
+
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
->>>>>>> f9a9045519400c8780ee0526179ed12713432682
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +35,10 @@ import okhttp3.Response;
 
 public class activity_login extends AppCompatActivity {
     GetJoson getJoson = GetJoson.getInstance();
-<<<<<<< HEAD
+
     boolean validPass;
     boolean validEmail;
-=======
+
     //네이버 client 정보
     private static final String TAG = "OAuthSampleActivity";
     private static String OAUTH_CLIENT_ID = "TQP9iDx2BHY61vQBAJBf";
@@ -59,7 +58,7 @@ public class activity_login extends AppCompatActivity {
     private static TextView mOAuthState;
 
   //  private OAuthLoginButton mOAuthLoginButton;
->>>>>>> f9a9045519400c8780ee0526179ed12713432682
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -88,14 +87,14 @@ public class activity_login extends AppCompatActivity {
             }
         });
 
-<<<<<<< HEAD
+
 //        회원가입으로 넘어가는 버튼
-=======
+
 
         mOAuthLoginButton = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler);
 
->>>>>>> f9a9045519400c8780ee0526179ed12713432682
+
         textView_membership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
