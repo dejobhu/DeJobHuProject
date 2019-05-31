@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -108,30 +109,33 @@ public class activity_login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //패스워드와 이메일을 형식에 맞게 입력하였으면
-                if(validPass && validEmail) {
+
 //                내가 적은 이메일을 받음
-                    final String Email_ID = editText_Email_ID.getText().toString();
+                final String Email_ID = editText_Email_ID.getText().toString();
 //                공백문자가 포함되어 있으면
-                    if (isEmptyOrWhiteSpace(Email_ID))
+                if (isEmptyOrWhiteSpace(Email_ID))
 //                    에러 텍스트뷰로 지정한 것을 보여줌(평소엔 안보임)
-                        textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
-                    else {
+                    textView_ErrorEmail_ID.setVisibility(View.VISIBLE);
+                else {
 //                    포함되어있지 않으면 숨김.
-                        textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
-                    }
+                    textView_ErrorEmail_ID.setVisibility(View.INVISIBLE);
+                }
 //                패스워드도 받아서
-                    final String Password = editText_Password.getText().toString();
+                final String Password = editText_Password.getText().toString();
 //                만약 공백문자가 포함되어있으면
-                    if (isEmptyOrWhiteSpace(Password))
+                if (isEmptyOrWhiteSpace(Password))
 //                    에러텍스트뷰를 보여줌.
-                        textView_ErrorPassword.setVisibility(View.VISIBLE);
-                    else {
-                        textView_ErrorPassword.setVisibility(View.INVISIBLE);
-                    }
-
+                    textView_ErrorPassword.setVisibility(View.VISIBLE);
+                else {
+                    textView_ErrorPassword.setVisibility(View.INVISIBLE);
+                }
+//                옳은 이메일, 패스워드인지 체크
+                validEmail = validTestForEmail(Email_ID);
+                validPass = validTestForPass(Password);
 //                로그인 버튼을 눌렀는지 확인하기 위해서
-                    Log.d("버튼", "test");
+                Log.d("버튼", "test");
 
+                if (validEmail && validPass) {
                     new Thread() {
                         public void run() {
 // 파라미터 2개와 미리정의해논 콜백함수를 매개변수로 전달하여 호출
@@ -141,14 +145,13 @@ public class activity_login extends AppCompatActivity {
 
 //                requestWebServer를 잘 통과했는지 보기 위해서
                     Log.d("버튼", "end");
-                }
-                else if(!validPass){
+                } else if (!validPass) {
                     Toast.makeText(getApplicationContext(), "패스워드를 8-20자 사이로 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "이메일을 올바른 형식으로 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
 
 
@@ -335,8 +338,17 @@ public class activity_login extends AppCompatActivity {
         }
     };
 
-//TODO:이따가 패스워드 유효성 검사 체크하기.
-//    private boolean validTestForPass(String pass){
-//        return;
-//    }
+
+    private boolean validTestForPass(String pass){
+        if(pass.length() >= 8 && pass.length() <=20)
+            return true;
+        else
+            return false;
+    }
+
+    private boolean validTestForEmail(String email){
+        if(Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return true;
+        else return false;
+    }
 }
