@@ -6,20 +6,21 @@
     android:layout_height="match_parent">
 
 
-
     <EditText
         android:id="@+id/editText_Email_ID"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="362dp"
         android:ems="10"
         android:hint="@string/Email_ID"
         android:inputType="textPersonName"
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonOAuthLoginImg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,14 +31,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
         android:ems="10"
         android:hint="@string/Password"
-        android:textSize="18sp"
         android:inputType="textPassword"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Email_ID" />
@@ -47,10 +46,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp"
         android:background="@color/baseColor"
         android:fontFamily="@font/nanumsquareb"
         android:text="@string/Login"
@@ -60,22 +57,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Password" />
 
+
     <TextView
         android:id="@+id/textView_findID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:textSize="17sp"
-        android:layout_marginRight="8dp"
+        android:fontFamily="@font/nanumbarungothic"
         android:singleLine="true"
+<<<<<<< HEAD
         android:text="비밀번호 찾기"
         android:fontFamily="@font/nanumbarungothic"
+=======
+        android:text="@string/findID"
+        android:textSize="17sp"
+>>>>>>> f9a9045519400c8780ee0526179ed12713432682
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.443"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_login" />
+
 
     <TextView
         android:id="@+id/textView_membership"
@@ -84,10 +87,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="15dp"
-        android:textSize="18sp"
-        android:textColor="@color/colorAccent"
         android:fontFamily="@font/nanumbarungothic"
         android:text="@string/signUp"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -97,25 +100,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginBottom="660dp"
         android:text="@string/Error_Email_ID"
         android:textColor="@android:color/holo_red_light"
         android:textSize="15sp"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Email_ID" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonOAuthLoginImg" />
 
     <TextView
         android:id="@+id/textView_ErrorPass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="@string/Error_Password"
         android:textColor="@android:color/holo_red_light"
         android:textSize="15sp"
@@ -123,6 +124,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Password" />
+
+
+    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+        android:id="@+id/buttonOAuthLoginImg"
+        android:layout_width="310dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="201dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Email_ID" />
 
 
 </android.support.constraint.ConstraintLayout>
