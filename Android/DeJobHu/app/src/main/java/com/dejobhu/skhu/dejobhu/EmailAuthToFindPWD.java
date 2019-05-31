@@ -44,12 +44,15 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
                 email = inputEmail.getText().toString();
                 if(inputEmail != null) {
                     if(Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
+
                         if (!isOnceClicked) {
+
                             timeGoes(300);
                             isOnceClicked = true;
                             Random random = new Random();
                             authPass = random.nextInt(900000) + 100000;
                             Log.d("인증번호 : ", "" + authPass);
+                            Toast.makeText(getApplicationContext(), "인증번호를 보냈습니다.", Toast.LENGTH_SHORT).show();
 
 //                    getJoson.requestWebServer("api/sendMail", mailCallback, passedEmail, authPass);
 //                    TODO: 이메일을 PHP단에 전송하여 메일 인증 시스템 구현하기.
