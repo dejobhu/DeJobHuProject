@@ -22,6 +22,7 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
     EditText inputEmail;
     Timer timer;
     boolean isOnceClicked = false;
+    String email;
     int authPass;
     int count;
     GetJoson getJoson = GetJoson.getInstance();
@@ -40,7 +41,7 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 inputEmail = (EditText)findViewById(R.id.emailText);
-                String email = inputEmail.getText().toString();
+                email = inputEmail.getText().toString();
                 if(inputEmail != null) {
                     if(Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
                         if (!isOnceClicked) {
@@ -79,6 +80,7 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
                 if(userPass.equals(randPass)){
                     Intent intent = new Intent(getApplicationContext(), ResetPassword.class);
                     intent.putExtra("isEmailAuthed?", "true");
+                    intent.putExtra("email", email);
                     startActivity(intent);
                 }
 

@@ -26,7 +26,7 @@ public class ResetPassword extends AppCompatActivity {
     EditText newPWD1;
     EditText newPWD2;
     Button submit;
-    GetJoson getJoson;
+    GetJoson getJoson = GetJoson.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +45,12 @@ public class ResetPassword extends AppCompatActivity {
                 //이메일 인증 끝나고 넘어온 이메일을 받음.
                 Intent intent = getIntent();
                 //이메일
-                String email = intent.getStringExtra("email");
+                final String email = intent.getStringExtra("email");
 
                 //버튼 눌렀을 때 edittext에서 값 불러읽음.
                 newPWD1 = (EditText)findViewById(R.id.newPWDInput1);
                 newPWD2 = (EditText)findViewById(R.id.newPWDInput2);
-                String pwd1 = newPWD1.getText().toString();
+                final String pwd1 = newPWD1.getText().toString();
                 String pwd2 = newPWD2.getText().toString();
                 //첫 번째 패스워드와 두 번째 패스워드의 유효성을 검사한다.
                 if(checkValidPass(pwd1) && checkValidPass(pwd2)){
@@ -59,8 +59,17 @@ public class ResetPassword extends AppCompatActivity {
                         newPWD2.setError("두 비밀번호가 다릅니다.");
                     }
                     else{
-                        getJoson.requestWebServer("api/user/resetPass", resPassCallback, email, pwd1);
+                        Log.d("Point", "여기");
+                        new Thread(){
+                            public void run(){
+                                Log.d("Point", "여기3");
+                                getJoson.requestWebServer("api/user/resetPass", resPassCallback, email, pwd1);
+                            }
+                        }.start();
+                        Log.d("Point", "여기2");
+
                     }
+
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "패스워드 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();

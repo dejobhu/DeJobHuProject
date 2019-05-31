@@ -184,8 +184,8 @@ public class activity_login extends AppCompatActivity {
         }
     };
 
-
-    private boolean validTestForPass(String pass){
-
-    }
+//TODO:이따가 패스워드 유효성 검사 체크하기.
+//    private boolean validTestForPass(String pass){
+//        return;
+//    }
 }
