@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">DeJobHu</string>
 
+    <string name="kakao_app_key">99a3acdfa95136670ee6510ff281b133</string>
+
     <string name="title_activity_main_form">MainFormActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
