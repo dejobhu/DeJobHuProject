@@ -12,9 +12,17 @@ import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class EmailAuthToFindPWD extends AppCompatActivity {
     EditText insertPass;
@@ -51,8 +59,14 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
                             isOnceClicked = true;
                             Random random = new Random();
                             authPass = random.nextInt(900000) + 100000;
+                            final String paramPass = Integer.toString(authPass);
                             Log.d("인증번호 : ", "" + authPass);
-                            Toast.makeText(getApplicationContext(), "인증번호를 보냈습니다.", Toast.LENGTH_SHORT).show();
+                            new Thread(){
+                                public void run(){
+                                    getJoson.requestWebServer("mail", mailCallback, email, paramPass);
+                                }
+                            }.start();
+
 
 //                    getJoson.requestWebServer("api/sendMail", mailCallback, passedEmail, authPass);
 //                    TODO: 이메일을 PHP단에 전송하여 메일 인증 시스템 구현하기.
@@ -126,4 +140,46 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
         timer.schedule(tt, 0, 1000);
 
     }
+
+    private Callback mailCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d("실패", "실패함");
+        }
+
+        @Override
+        public void onResponse(Call call, final Response response) throws IOException {
+            EmailAuthToFindPWD.this.runOnUiThread(new Runnable() {
+                String s = response.body().string();
+
+                @Override
+                public void run() {
+                    Log.d("String 값은", s);
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        if(jsonObject.getString("result").equals("2000")){
+                            EmailAuthToFindPWD.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "성공적으로 메일을 전송했습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else{
+                            EmailAuthToFindPWD.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "메일 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+    };
+
 }

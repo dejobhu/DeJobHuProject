@@ -39,7 +39,7 @@ public class EmailAuthActivity extends AppCompatActivity {
 
         Intent intent = getIntent(); // membership_register로부터 넘어온 인텐트 값 수신
         final String passedEmail = intent.getStringExtra("email");
-//        Log.d("넘어온 이메일 : ", passedEmail);
+        Log.d("넘어온 이메일 : ", passedEmail);
         final Button authButton = (Button)findViewById(R.id.authButton);
         authButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class EmailAuthActivity extends AppCompatActivity {
                         public void run() {
                             getJoson.requestWebServer("mail", mailCallback, passedEmail, paramPass);
                         }
-                    };
+                    }.start();
                 }
             }
         });
@@ -90,15 +90,17 @@ public class EmailAuthActivity extends AppCompatActivity {
     private Callback mailCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
-
+            Log.d("실패", "실패함");
         }
 
         @Override
         public void onResponse(Call call, final Response response) throws IOException {
             EmailAuthActivity.this.runOnUiThread(new Runnable() {
                 String s = response.body().string();
+
                 @Override
                 public void run() {
+                    Log.d("String 값은", s);
                     try {
                         JSONObject jsonObject = new JSONObject(s);
                         if(jsonObject.getString("result").equals("2000")){
