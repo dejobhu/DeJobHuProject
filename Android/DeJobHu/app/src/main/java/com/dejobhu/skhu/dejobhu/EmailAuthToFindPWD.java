@@ -63,6 +63,11 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
                     @Override
                     public void run() {
                         getJoson.requestWebServer("api/userValidByEmail", mailCheckCallback, email);
+                        try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 checkMailThread.start();

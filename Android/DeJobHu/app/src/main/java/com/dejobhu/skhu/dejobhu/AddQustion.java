@@ -177,7 +177,7 @@ public class AddQustion extends AppCompatActivity {
 
                         joson.PostRequest("api/post/upPost",callback,hash);
                     }
-                }.run();
+                }.start();
             }
         });
     }
