@@ -1,6 +1,9 @@
 package com.dejobhu.skhu.dejobhu;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,13 +35,16 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
     boolean isOnceClicked = false;
     String email;
     int authPass;
+    Thread checkMailThread;
     int count;
     GetJoson getJoson = GetJoson.getInstance();
+    boolean mailCheck ;
+    public static Activity _emailAuthToFindPWD;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_auth_to_find_pwd);
-
+        _emailAuthToFindPWD = EmailAuthToFindPWD.this;
 
 //        Intent intent = getIntent(); // membership_register로부터 넘어온 인텐트 값 수신
 //        final String passedEmail = intent.getStringExtra("email");   // 이메일을 직접 입력하므로
@@ -50,33 +56,57 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
             public void onClick(View view) {
                 inputEmail = (EditText)findViewById(R.id.emailText);
                 email = inputEmail.getText().toString();
-                if(inputEmail != null) {
-                    if(Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
+                //이메일이 디비에 있어야하므로 확인하는 절차를 만든다.
 
-                        if (!isOnceClicked) {
+//                새 스레드를 추가하면 안됨(확인 하고 가입시켜야하니까.... 그럼 다 바꿔야되지 않나? 확인하는 작업이니까 그런건가
+                checkMailThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getJoson.requestWebServer("api/userValidByEmail", mailCheckCallback, email);
+                    }
+                });
+                checkMailThread.start();
 
-                            timeGoes(300);
-                            isOnceClicked = true;
-                            Random random = new Random();
-                            authPass = random.nextInt(900000) + 100000;
-                            final String paramPass = Integer.toString(authPass);
-                            Log.d("인증번호 : ", "" + authPass);
-                            new Thread(){
-                                public void run(){
-                                    getJoson.requestWebServer("mail", mailCallback, email, paramPass);
-                                }
-                            }.start();
+//                메일이 존재하는지 확인하는 스레드를 끝내고 다음 작업을 처리하기 위해.
+                try {
+                    checkMailThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.d("현재 mailCheck 상태 onClick", Boolean.toString(mailCheck));
+
+                if(!mailCheck) {
+                    showMessage("해당하는 메일을 확인할 수 없습니다.");
+                }
+                else {
+                    if (inputEmail != null) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {   // 이메일이 유효성검사를 통과하는지 확인.
+
+                            if (!isOnceClicked) {
+
+
+                                timeGoes(300);
+                                isOnceClicked = true;
+                                Random random = new Random();
+                                authPass = random.nextInt(900000) + 100000;
+                                final String paramPass = Integer.toString(authPass);
+                                Log.d("인증번호 : ", "" + authPass);
+                                new Thread() {
+                                    public void run() {
+                                        getJoson.requestWebServer("mail", mailCallback, email, paramPass);
+                                    }
+                                }.start();
 
 
 //                    getJoson.requestWebServer("api/sendMail", mailCallback, passedEmail, authPass);
 //                    TODO: 이메일을 PHP단에 전송하여 메일 인증 시스템 구현하기.
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "올바른 이메일을 입력해 주세요.", Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "이메일을 입력 안하셨습니다.", Toast.LENGTH_LONG).show();
                     }
-                    else{
-                        Toast.makeText(getApplicationContext(), "올바른 이메일을 입력해 주세요.", Toast.LENGTH_LONG).show();
-                    }
-                }else {
-                    Toast.makeText(getApplicationContext(), "이메일을 입력 안하셨습니다.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -140,7 +170,51 @@ public class EmailAuthToFindPWD extends AppCompatActivity {
         timer.schedule(tt, 0, 1000);
 
     }
+    public void showMessage(String message){
+        AlertDialog alertDialog;
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("알림");
+        alertBuilder.setMessage(message);
+        alertBuilder.setPositiveButton("예", new DialogInterface.OnClickListener(){
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("YES", "예 버튼이 눌렸습니다.");
+            }
+        });
+
+        alertDialog = alertBuilder.create();
+        alertDialog.show();
+    }
+    //메일이 존재하는지를 확인하기 위한 콜백함수
+    private Callback mailCheckCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String s = response.body().string();
+
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                //해당하는 이메일이 존재한다면
+                if(jsonObject.getString("result").equals("2000")){
+                    mailCheck = true;
+                }
+                else{
+                    mailCheck = false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("현재 mailCheck Callback ", Boolean.toString(mailCheck));
+
+        }
+    };
+
+//    메일을 보내기 위한 콜백함수
     private Callback mailCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
