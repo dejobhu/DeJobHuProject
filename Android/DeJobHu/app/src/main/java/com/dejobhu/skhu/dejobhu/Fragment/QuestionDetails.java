@@ -27,7 +27,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.dejobhu.skhu.dejobhu.MainFormActivity;
 import com.dejobhu.skhu.dejobhu.MenuOptions;
+import com.dejobhu.skhu.dejobhu.NoteReceiverStat;
 import com.dejobhu.skhu.dejobhu.R;
+import com.dejobhu.skhu.dejobhu.SendNote;
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
 import com.dejobhu.skhu.dejobhu.adapters.CommentAdapter;
@@ -58,55 +60,7 @@ public class QuestionDetails extends Fragment {
     RecyclerView recyclerView;
     CommentAdapter adapter;
     ArrayList<CommentItem> arrayListComment = new ArrayList<>();
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        setHasOptionsMenu(true);
-
-        return inflater.inflate(R.layout.questiondetails, container, false);
-    }
-
-
-    public QuestionDetails(int id) {
-        this.post_id = id;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        recyclerView = view.findViewById(R.id.recyclerView);
-        progressBar = view.findViewById(R.id.progressBar);
-        linearLayout = view.findViewById(R.id.detail_content);
-        recyclerView = view.findViewById(R.id.detail_recycle);
-        linearLayout.setAlpha(0f);
-
-        ObjectAnimator animator = ObjectAnimator.ofFloat(linearLayout, View.ALPHA, 0f, 1f);
-
-        animator.setStartDelay(50);
-        animator.setDuration(150);
-        animator.start();
-
-        progressBar.setVisibility(View.VISIBLE);
-        linearLayout.setVisibility(View.INVISIBLE);
-        new Thread() {
-            @Override
-            public void run() {
-                GetJoson joson = GetJoson.getInstance();
-                Userinfo userinfo = Userinfo.shared;
-                joson.requestWebServer("api/post/getPost", callback, "" + post_id);
-            }
-        }.run();
-
-        adapter = new CommentAdapter(getActivity(), arrayListComment);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-    }
-
+    GetJoson getJoson = GetJoson.getInstance();
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -171,6 +125,54 @@ public class QuestionDetails extends Fragment {
         }
     };
 
+
+    public QuestionDetails(int id) {
+        this.post_id = id;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
+
+        return inflater.inflate(R.layout.questiondetails, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressBar);
+        linearLayout = view.findViewById(R.id.detail_content);
+        recyclerView = view.findViewById(R.id.detail_recycle);
+        linearLayout.setAlpha(0f);
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(linearLayout, View.ALPHA, 0f, 1f);
+
+        animator.setStartDelay(50);
+        animator.setDuration(150);
+        animator.start();
+
+        progressBar.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.INVISIBLE);
+        new Thread() {
+            @Override
+            public void run() {
+                GetJoson joson = GetJoson.getInstance();
+                Userinfo userinfo = Userinfo.shared;
+                joson.requestWebServer("api/post/getPost", callback, "" + post_id);
+            }
+        }.run();
+
+        adapter = new CommentAdapter(getActivity(), arrayListComment);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -182,20 +184,20 @@ public class QuestionDetails extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == MenuOptions.NUM_MODIFY){
+        if (item.getItemId() == MenuOptions.NUM_MODIFY) {
             Log.d("프래그먼트", "수정하기");
             return true;
-        }else if(item.getItemId() == MenuOptions.NUM_DELETE){
+        } else if (item.getItemId() == MenuOptions.NUM_DELETE) {
             Log.d("프래그먼트", "삭제하기");
             return true;
-        }else if(item.getItemId() == MenuOptions.NUM_REPORT){
+        } else if (item.getItemId() == MenuOptions.NUM_REPORT) {
             Log.d("프래그먼트", "신고하기");
             return true;
-        }else if(item.getItemId() == MenuOptions.NUM_NOTES){
+        } else if (item.getItemId() == MenuOptions.NUM_NOTES) {
             Log.d("프래그먼트", "쪽지보내기");
-            Intent intent = new Intent()
+            runUserIdByPostId();
             return true;
-        }else{
+        } else {
             Log.d("프래그먼트", "아무것ㄷ아님");
         }
         return super.onOptionsItemSelected(item);
@@ -230,6 +232,43 @@ public class QuestionDetails extends Fragment {
 
         progressBar.setVisibility(View.INVISIBLE);
         linearLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void runUserIdByPostId() {
+        final int id = post_id;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getJoson.requestWebServer("api/getUserIdByPostId", new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String s = response.body().string();
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            String passedId = jsonObject.getString("id");
+                            String passedEmail = jsonObject.getString("email");
+                            String passedname = jsonObject.getString("name");
+//                            쪽지 수신자에 대한 정보를 저장
+                            NoteReceiverStat user = new NoteReceiverStat(Integer.parseInt(passedId), passedname, passedEmail);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, Integer.toString(id));
+            }
+        }).start();
+
+        Intent intent = new Intent(getActivity(), SendNote.class);
+//        객체를 intent로 전달해야 함.
+        intent.putExtra("recvId", user)
+
     }
 
     @Override
