@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,21 +22,53 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Fragment.QuestionListFragment;
+import com.dejobhu.skhu.dejobhu.Handler.BackPressCloseHandler;
+import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
+import com.dejobhu.skhu.dejobhu.login.FirstAuthActivity;
+import com.dejobhu.skhu.dejobhu.login.SaveSharedPreference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
-
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class MainFormActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    GetJoson getJoson = GetJoson.getInstance();
+//    뒤로가기 버튼을 담당할 핸들러
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_form);
+//        뒤로가기 버튼 두번누르는거 구현
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
+
+
+//        자동로그인 인텐트에 의해 이메일이 전달받았다면
+        Intent intent = getIntent();
+        final String email = intent.getStringExtra("SSP_EMAIL");
+        if(email != null){
+            Log.d("넘어온 이메일 ", email);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("자동로그인", "쓰레드");
+                    getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
+                }
+            }).start();
+//                    TODO: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
+        }
+
 
         //----------------------Toobar Setting---------------------------------------------------
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,6 +134,39 @@ public class MainFormActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    Callback autoLoginCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String s = response.body().string();
+//            Log.d("자동로그인", "콜백함수");
+//            Log.d("자동로그인 s", s);
+            try{
+                JSONObject jsonObject = new JSONObject(s);
+//                Log.d("자동로그인", "try-catch문");
+                JSONObject dataObject = jsonObject.getJSONObject("data");
+//                Log.d("id", dataObject.getInt("id"));
+                int id = dataObject.getInt("id");
+                String email = dataObject.getString("email");
+                String name = dataObject.getString("name");
+//                Log.d("자동로그인 id", Integer.toString(id));
+//                Log.d("자동로그인 email", email);
+//                Log.d("자동로그인 name", name);
+                Userinfo user = Userinfo.shared;
+                user.setEmail(email);
+                user.setId(id);
+                user.setName(name);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -109,7 +175,7 @@ public class MainFormActivity extends AppCompatActivity
         }else if(getSupportFragmentManager().getBackStackEntryCount() >= 1) {
             getSupportFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            backPressCloseHandler.onBackPressed();
         }
     }
 
@@ -151,7 +217,10 @@ public class MainFormActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_logout){
+        }
+//        로그아웃 버튼 리스너 설정.
+        else if (id == R.id.nav_logout){
+            SaveSharedPreference.clearUserEmail(MainFormActivity.this);
             Intent i = new Intent(getApplicationContext(), activity_login.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);

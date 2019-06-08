@@ -11,9 +11,17 @@ import android.widget.Toast;
 
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class EmailAuthActivity extends AppCompatActivity {
 
@@ -31,7 +39,7 @@ public class EmailAuthActivity extends AppCompatActivity {
 
         Intent intent = getIntent(); // membership_register로부터 넘어온 인텐트 값 수신
         final String passedEmail = intent.getStringExtra("email");
-//        Log.d("넘어온 이메일 : ", passedEmail);
+        Log.d("넘어온 이메일 : ", passedEmail);
         final Button authButton = (Button)findViewById(R.id.authButton);
         authButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,9 +50,14 @@ public class EmailAuthActivity extends AppCompatActivity {
                     Random random = new Random();
                     authPass = random.nextInt(900000) + 100000;
                     Log.d("인증번호 : " , "" + authPass);
-
-//                    getJoson.requestWebServer("api/sendMail", mailCallback, passedEmail, authPass);
-//                    TODO: 이메일을 PHP단에 전송하여 메일 인증 시스템 구현하기.
+                    //int 형을 String으로 바꾸어주어야 하므로.
+                    final String paramPass = Integer.toString(authPass);
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            getJoson.requestWebServer("mail", mailCallback, passedEmail, paramPass);
+                        }
+                    }.start();
                 }
             }
         });
@@ -74,6 +87,46 @@ public class EmailAuthActivity extends AppCompatActivity {
         });
 
     }
+    private Callback mailCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d("실패", "실패함");
+        }
+
+        @Override
+        public void onResponse(Call call, final Response response) throws IOException {
+            EmailAuthActivity.this.runOnUiThread(new Runnable() {
+                String s = response.body().string();
+
+                @Override
+                public void run() {
+                    Log.d("String 값은", s);
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        if(jsonObject.getString("result").equals("2000")){
+                            EmailAuthActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "성공적으로 메일을 전송했습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else{
+                            EmailAuthActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "메일 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+    };
 
 
     public String expressTime(int time){

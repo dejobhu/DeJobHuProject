@@ -38,6 +38,7 @@ public class membership_register extends AppCompatActivity {
     boolean isValidTestEmail = false;
     boolean isAuthEmail = false;
     private static final int authAct = 101;
+    String email;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.membership_register);
@@ -145,7 +146,7 @@ public class membership_register extends AppCompatActivity {
         button_valid_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String email = editText_Email_ID.getText().toString();
+                email = editText_Email_ID.getText().toString();
                 if(email.equals("")){
                     showMessage("이메일을 입력해 주세요");
                 }
@@ -158,9 +159,6 @@ public class membership_register extends AppCompatActivity {
                         @Override
                         public void run() {
                             getJoson.requestWebServer("api/userValidByEmail", validCallbackByEmail, email);
-                            if(isValidTestEmail == true){
-                                towardToAuthEmail(email);
-                            }
 
                         }
                     }.start();
@@ -342,7 +340,8 @@ public class membership_register extends AppCompatActivity {
                         }
                     });
                     isValidTestEmail = true;
-
+                    Log.d("toward하기 전 email", email);
+                    towardToAuthEmail(email);
 
 
                 }

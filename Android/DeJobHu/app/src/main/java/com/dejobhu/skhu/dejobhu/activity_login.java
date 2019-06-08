@@ -2,6 +2,7 @@ package com.dejobhu.skhu.dejobhu;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
 
+import com.dejobhu.skhu.dejobhu.login.SaveSharedPreference;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
@@ -37,8 +40,11 @@ import okhttp3.Response;
 public class activity_login extends AppCompatActivity {
     GetJoson getJoson = GetJoson.getInstance();
 
+    boolean isAutoLoginChecked;
     boolean validPass;
     boolean validEmail;
+
+
 
     //네이버 client 정보
     private static final String TAG = "OAuthSampleActivity";
@@ -68,6 +74,7 @@ public class activity_login extends AppCompatActivity {
 
 
         initData();
+
 
         TextView textView_findId = (TextView)findViewById(R.id.textView_findID);
         TextView textView_membership = (TextView)findViewById(R.id.textView_membership);
@@ -104,10 +111,13 @@ public class activity_login extends AppCompatActivity {
             }
         });
 
+
+
         //로그인 버튼을 눌럿을 때
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //패스워드와 이메일을 형식에 맞게 입력하였으면
 
 //                내가 적은 이메일을 받음
@@ -136,6 +146,13 @@ public class activity_login extends AppCompatActivity {
                 Log.d("버튼", "test");
 
                 if (validEmail && validPass) {
+                    //                만약 자동로그인 버튼을 눌렀다면
+                    CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
+                    isAutoLoginChecked = checkBox.isChecked();
+                    if(isAutoLoginChecked){
+//                  만약 자동로그인 체크 되어잇으면 그 정보를 저장하고, 다음에 불러올 때 UserInfo에 저장
+                        SaveSharedPreference.setUserEmail(activity_login.this, Email_ID);
+                    }
                     new Thread() {
                         public void run() {
 // 파라미터 2개와 미리정의해논 콜백함수를 매개변수로 전달하여 호출
@@ -286,6 +303,7 @@ public class activity_login extends AppCompatActivity {
         return s.trim().length() == 0;
     }
 
+//    로그인 콜백함수
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -293,10 +311,12 @@ public class activity_login extends AppCompatActivity {
         }
 
         @Override
+//        응답이 왔으면
         public void onResponse(Call call, Response response) throws IOException {
             String s = response.body().string();
 
             try {
+
 
                 JSONObject jsonObject = new JSONObject(s);
                 if(jsonObject.getString("result").equals("NG") || jsonObject.getString("result").equals("1000")) {
@@ -317,6 +337,7 @@ public class activity_login extends AppCompatActivity {
                 //jsonObject를 이용한 사용자 정보 추출 구현해야함
                 else{
 
+
                     JSONObject user=jsonObject.getJSONObject("data");
 //                    JSONObject user=data.getJSONObject("0");
                     Userinfo userinfo=Userinfo.shared;
@@ -325,8 +346,6 @@ public class activity_login extends AppCompatActivity {
                     userinfo.setId(user.getInt("id"));
                     userinfo.setEmail(user.getString("email"));
                     userinfo.setName(user.getString("name"));
-
-
 
                     Intent intent = new Intent(getApplicationContext(), MainFormActivity.class);
                     startActivity(intent);

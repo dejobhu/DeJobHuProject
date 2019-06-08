@@ -174,10 +174,10 @@ public class AddQustion extends AppCompatActivity {
                                 hash.put(key+(i+1),getStringImage(((BitmapDrawable)imageView.getDrawable()).getBitmap()));
                             }
                         }
-
+                        Log.d("hash", hash.toString());
                         joson.PostRequest("api/post/upPost",callback,hash);
                     }
-                }.run();
+                }.start();
             }
         });
     }
