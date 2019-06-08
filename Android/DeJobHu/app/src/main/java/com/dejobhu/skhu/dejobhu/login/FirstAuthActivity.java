@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.dejobhu.skhu.dejobhu.MainFormActivity;
 import com.dejobhu.skhu.dejobhu.R;
@@ -34,6 +35,7 @@ public class FirstAuthActivity extends AppCompatActivity {
 
             intent = new Intent(FirstAuthActivity.this, MainFormActivity.class);
             intent.putExtra("SSP_EMAIL", SaveSharedPreference.getUserEmail(this).toString());
+//            Log.d("로그", "자동로그인입니다." + SaveSharedPreference.getUserEmail(this).toString()); 잘 옴
 //            todo:내일까지 이 인텐트 제대로 전달받는지, 전달받았다면 userinfo로 적절히 전달되는지 확인할것.
             startActivity(intent);
             this.finish();

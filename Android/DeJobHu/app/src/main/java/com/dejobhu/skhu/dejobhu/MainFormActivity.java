@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -57,10 +58,12 @@ public class MainFormActivity extends AppCompatActivity
         Intent intent = getIntent();
         final String email = intent.getStringExtra("SSP_EMAIL");
         if(email != null){
+            Log.d("넘어온 이메일 ", email);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    getJoson.requestWebServer("api/userValidByEmail", autoLoginCallback, email);
+                    Log.d("자동로그인", "쓰레드");
+                    getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
                 }
             }).start();
 //                    TODO: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
@@ -140,14 +143,22 @@ public class MainFormActivity extends AppCompatActivity
         @Override
         public void onResponse(Call call, Response response) throws IOException {
             String s = response.body().string();
+//            Log.d("자동로그인", "콜백함수");
+//            Log.d("자동로그인 s", s);
             try{
                 JSONObject jsonObject = new JSONObject(s);
-                String id = jsonObject.getString("id");
-                String email = jsonObject.getString("email");
-                String name = jsonObject.getString("name");
+//                Log.d("자동로그인", "try-catch문");
+                JSONObject dataObject = jsonObject.getJSONObject("data");
+//                Log.d("id", dataObject.getInt("id"));
+                int id = dataObject.getInt("id");
+                String email = dataObject.getString("email");
+                String name = dataObject.getString("name");
+//                Log.d("자동로그인 id", Integer.toString(id));
+//                Log.d("자동로그인 email", email);
+//                Log.d("자동로그인 name", name);
                 Userinfo user = Userinfo.shared;
                 user.setEmail(email);
-                user.setId(Integer.valueOf(id));
+                user.setId(id);
                 user.setName(name);
             } catch (JSONException e) {
                 e.printStackTrace();

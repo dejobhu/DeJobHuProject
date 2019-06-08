@@ -347,12 +347,6 @@ public class activity_login extends AppCompatActivity {
                     userinfo.setEmail(user.getString("email"));
                     userinfo.setName(user.getString("name"));
 
-
-
-
-
-
-
                     Intent intent = new Intent(getApplicationContext(), MainFormActivity.class);
                     startActivity(intent);
                     finish();
