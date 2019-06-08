@@ -41,100 +41,8 @@ import okhttp3.Response;
 
 public class MainFormActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     GetJoson getJoson = GetJoson.getInstance();
-//    뒤로가기 버튼을 담당할 핸들러
-    private BackPressCloseHandler backPressCloseHandler;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_form);
-//        뒤로가기 버튼 두번누르는거 구현
-        backPressCloseHandler = new BackPressCloseHandler(this);
-
-
-
-//        자동로그인 인텐트에 의해 이메일이 전달받았다면
-        Intent intent = getIntent();
-        final String email = intent.getStringExtra("SSP_EMAIL");
-        if(email != null){
-            Log.d("넘어온 이메일 ", email);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("자동로그인", "쓰레드");
-                    getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
-                }
-            }).start();
-//                    todo: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
-        }
-
-
-        //----------------------Toobar Setting---------------------------------------------------
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        Button Appbar_My=toolbar.findViewById(R.id.appbar_btn_1);
-//        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
-        //툴바안 글씨 색깔 설정
-        Appbar_My.setTextColor(Color.rgb(0,0,0));
-
-        Appbar_My.setTextSize(18.5f);
-
-//        //버튼 리스너
-        Appbar_My.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainFormActivity.this,"My test",Toast.LENGTH_LONG).show();
-            }
-        });
-//        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MainFormActivity.this,"SNS test",Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-        setSupportActionBar(toolbar);
-        //기본 타이틀바 없애기
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //---------------------------------------------------------------------------------------------------------
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Intent intent=new Intent(MainFormActivity.this,AddQustion.class);
-                startActivity(intent);
-            }
-        });
-
-//        네비게이션 바랑 메인 액티비티랑 누가 더 위에 띄울지 결정하는거인듯.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.container, new QuestionListFragment())
-                    .commit();
-        }
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        View view=navigationView.getHeaderView(0);
-
-        ((TextView)view.findViewById(R.id.nav_header_name)).setText(Userinfo.shared.getName()); //Drawable 사용자 이름 변경
-
-
-        // 별점 받아오기 , 프로필 받아오기, 회원등급 받아오기
-
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
     Callback autoLoginCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -146,7 +54,7 @@ public class MainFormActivity extends AppCompatActivity
             String s = response.body().string();
 //            Log.d("자동로그인", "콜백함수");
 //            Log.d("자동로그인 s", s);
-            try{
+            try {
                 JSONObject jsonObject = new JSONObject(s);
 //                Log.d("자동로그인", "try-catch문");
                 JSONObject dataObject = jsonObject.getJSONObject("data");
@@ -167,13 +75,104 @@ public class MainFormActivity extends AppCompatActivity
 
         }
     };
+    //    뒤로가기 버튼을 담당할 핸들러
+    private BackPressCloseHandler backPressCloseHandler;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_form);
+//        뒤로가기 버튼 두번누르는거 구현
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
+
+//        자동로그인 인텐트에 의해 이메일이 전달받았다면
+        Intent intent = getIntent();
+        final String email = intent.getStringExtra("SSP_EMAIL");
+        if (email != null) {
+            Log.d("넘어온 이메일 ", email);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("자동로그인", "쓰레드");
+                    getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
+                }
+            }).start();
+//                    todo: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
+        }
+
+
+        //----------------------Toobar Setting---------------------------------------------------
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        Button Appbar_My = toolbar.findViewById(R.id.appbar_btn_1);
+//        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
+        //툴바안 글씨 색깔 설정
+        Appbar_My.setTextColor(Color.rgb(0, 0, 0));
+
+        Appbar_My.setTextSize(18.5f);
+
+//        //버튼 리스너
+        Appbar_My.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainFormActivity.this, "My test", Toast.LENGTH_LONG).show();
+            }
+        });
+//        Appbar_SNS.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MainFormActivity.this,"SNS test",Toast.LENGTH_LONG).show();
+//            }
+//        });
+
+        setSupportActionBar(toolbar);
+        //기본 타이틀바 없애기
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //---------------------------------------------------------------------------------------------------------
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainFormActivity.this, AddQustion.class);
+                startActivity(intent);
+            }
+        });
+
+//        네비게이션 바랑 메인 액티비티랑 누가 더 위에 띄울지 결정하는거인듯.
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new QuestionListFragment())
+                    .commit();
+        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View view = navigationView.getHeaderView(0);
+
+        ((TextView) view.findViewById(R.id.nav_header_name)).setText(Userinfo.shared.getName()); //Drawable 사용자 이름 변경
+
+
+        // 별점 받아오기 , 프로필 받아오기, 회원등급 받아오기
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else if(getSupportFragmentManager().getBackStackEntryCount() >= 1) {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() >= 1) {
             getSupportFragmentManager().popBackStack();
         } else {
             backPressCloseHandler.onBackPressed();
@@ -184,6 +183,8 @@ public class MainFormActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_form, menu);
+
+
         return true;
     }
 
@@ -195,10 +196,8 @@ public class MainFormActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(MainFormActivity.this, "setting버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -211,7 +210,7 @@ public class MainFormActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Intent intent=new Intent(MainFormActivity.this,list_MainActivity.class);
+            Intent intent = new Intent(MainFormActivity.this, list_MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
@@ -221,7 +220,7 @@ public class MainFormActivity extends AppCompatActivity
 
         }
 //        로그아웃 버튼 리스너 설정.
-        else if (id == R.id.nav_logout){
+        else if (id == R.id.nav_logout) {
             SaveSharedPreference.clearUserEmail(MainFormActivity.this);
             Intent i = new Intent(getApplicationContext(), activity_login.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

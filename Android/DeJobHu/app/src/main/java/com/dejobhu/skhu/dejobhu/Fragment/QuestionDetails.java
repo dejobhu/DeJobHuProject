@@ -2,6 +2,8 @@ package com.dejobhu.skhu.dejobhu.Fragment;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.dejobhu.skhu.dejobhu.MainFormActivity;
+import com.dejobhu.skhu.dejobhu.MenuOptions;
 import com.dejobhu.skhu.dejobhu.R;
 import com.dejobhu.skhu.dejobhu.Singleton.GetJoson;
 import com.dejobhu.skhu.dejobhu.Singleton.Userinfo;
@@ -57,6 +62,9 @@ public class QuestionDetails extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
+
         return inflater.inflate(R.layout.questiondetails, container, false);
     }
 
@@ -163,10 +171,34 @@ public class QuestionDetails extends Fragment {
         }
     };
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, MenuOptions.NUM_MODIFY, 0, "수정하기");
+        menu.add(0, MenuOptions.NUM_DELETE, 0, "삭제하기");
+        menu.add(0, MenuOptions.NUM_REPORT, 0, "신고하기");
+        menu.add(0, MenuOptions.NUM_NOTES, 0, "쪽지보내기");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == MenuOptions.NUM_MODIFY){
+            Log.d("프래그먼트", "수정하기");
+            return true;
+        }else if(item.getItemId() == MenuOptions.NUM_DELETE){
+            Log.d("프래그먼트", "삭제하기");
+            return true;
+        }else if(item.getItemId() == MenuOptions.NUM_REPORT){
+            Log.d("프래그먼트", "신고하기");
+            return true;
+        }else if(item.getItemId() == MenuOptions.NUM_NOTES){
+            Log.d("프래그먼트", "쪽지보내기");
+            Intent intent = new Intent()
+            return true;
+        }else{
+            Log.d("프래그먼트", "아무것ㄷ아님");
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void getPost() {
