@@ -13,9 +13,9 @@ import android.widget.Toast;
  */
 public class list_FABLayoutFragment extends Fragment {
 
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_floating_action_button, container, false);
-        FloatingActionButton button = (FloatingActionButton)rootView.findViewById(R.id.fab2);
+        FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.fab2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

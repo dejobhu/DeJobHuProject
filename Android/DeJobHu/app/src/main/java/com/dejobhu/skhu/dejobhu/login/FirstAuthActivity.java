@@ -23,13 +23,13 @@ public class FirstAuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_first_auth);
 
 //        만약 SaveSharedPreference 객체의 getUserName의 길이가 0이면, 즉 저장된 내용이 없다면 (Context객체는 왜 넣는건지? 이 액티비티에만 저장되는건가)
-        if(SaveSharedPreference.getUserEmail(FirstAuthActivity.this).length() == 0){
+        if (SaveSharedPreference.getUserEmail(FirstAuthActivity.this).length() == 0) {
 //            call Login Activity
 //            로그인 액티비티로 진행됨
             intent = new Intent(FirstAuthActivity.this, activity_login.class);
             startActivity(intent);
             this.finish();
-        }else{
+        } else {
 //            Call Next Activity
 //            자동로그인이라면, 바로 로그인이되도록.
 

@@ -66,7 +66,7 @@ public class MainFormActivity extends AppCompatActivity
                     getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
                 }
             }).start();
-//                    TODO: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
+//                    todo: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
         }
 
 
@@ -77,9 +77,9 @@ public class MainFormActivity extends AppCompatActivity
 //        Button Appbar_SNS=toolbar.findViewById(R.id.appbar_btn_2);
         //툴바안 글씨 색깔 설정
         Appbar_My.setTextColor(Color.rgb(0,0,0));
-//        Appbar_SNS.setTextColor(Color.rgb(0,0,0));
+
         Appbar_My.setTextSize(18.5f);
-//        Appbar_SNS.setTextSize(18.5f);
+
 //        //버튼 리스너
         Appbar_My.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +110,7 @@ public class MainFormActivity extends AppCompatActivity
             }
         });
 
+//        네비게이션 바랑 메인 액티비티랑 누가 더 위에 띄울지 결정하는거인듯.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -195,6 +196,7 @@ public class MainFormActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(MainFormActivity.this, "setting버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
             return true;
         }
 

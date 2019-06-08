@@ -12,15 +12,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class GetJoson{
+public class GetJoson {
     private static final String URL = "http://18.222.237.32/";
     private static OkHttpClient client;
 
     private static GetJoson instance = new GetJoson();
-    public static GetJoson getInstance(){
+
+    public static GetJoson getInstance() {
         return instance;
     }
-    public GetJoson(){
+
+    public GetJoson() {
         this.client = this.client = new OkHttpClient.Builder()
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
@@ -28,29 +30,29 @@ public class GetJoson{
 
     }
 
-    public void requestWebServer(String php, Callback callback, String ... params){
+    public void requestWebServer(String php, Callback callback, String... params) {
         //Get방식
-        String realURL = URL + php+"/";
+        String realURL = URL + php + "/";
 
-        if(params.length != 0) {
+        if (params.length != 0) {
             for (int i = 0; i < params.length; i++) {
-                if(i!=0)
-                    realURL +="&";
+                if (i != 0)
+                    realURL += "&";
                 realURL += params[i];
 
             }
         }
-        Log.d("url",realURL);
-    Request request = new Request.Builder().url(realURL).build();
-        if(request != null)
-        client.newCall(request).enqueue(callback);
+        Log.d("url", realURL);
+        Request request = new Request.Builder().url(realURL).build();
+        if (request != null)
+            client.newCall(request).enqueue(callback);
     }
 
 
     public void PageRequest(String PHP, Callback callback, String page) {
-        String url = URL+PHP+"?"+page;
+        String url = URL + PHP + "?" + page;
 
-        Log.d("url",url);
+        Log.d("url", url);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -60,23 +62,22 @@ public class GetJoson{
 
     public void PostRequest(String PHP, Callback callback, HashMap<String, String> map) {
 
-        String url=URL+PHP;
+        String url = URL + PHP;
 
-        FormBody.Builder bodybuilder= new FormBody.Builder();
-        for (String key:map.keySet()) {
+        FormBody.Builder bodybuilder = new FormBody.Builder();
+        for (String key : map.keySet()) {
 
-            bodybuilder.add(key,map.get(key));
+            bodybuilder.add(key, map.get(key));
         }
-        RequestBody body=bodybuilder.build();
+        RequestBody body = bodybuilder.build();
 
-        Request request=new Request.Builder()
+        Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
 
         client.newCall(request).enqueue(callback);
     }
-
 
 
 }
