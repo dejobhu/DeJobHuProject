@@ -29,7 +29,9 @@ dependencies {
     implementation 'com.kakao.sdk:usermgmt:1.17.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-
+//    당겨서새로고침
+    //noinspection GradleCompatible
+    implementation 'com.android.support:support-v4:28.0.0'
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.8.0'

@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,7 +68,7 @@ public class QuestionListFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     ArrayList<Question> arrayList = new ArrayList<Question>();
-
+    SwipeRefreshLayout swipeRefreshLayout;
 
     ProgressBar progressBar;
 
@@ -90,12 +91,20 @@ public class QuestionListFragment extends Fragment {
 
         postponeEnterTransition();
 
+        swipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_refresh_layout);
         recyclerView = view.findViewById(R.id.questionList);
         progressBar = view.findViewById(R.id.progressBar);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
         adapter = new QuestionAdapter();
         recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+//                refresh();
+            }
+        });
 
         final SNSViewModal viewModal = ViewModelProviders.of(this).get(SNSViewModal.class);
 
@@ -109,7 +118,9 @@ public class QuestionListFragment extends Fragment {
         });
 
     }
+    private void refresh(){
 
+    }
     private void render(State state) {
         if (state instanceof State.InProgress) {
             recyclerView.setVisibility(View.GONE);
