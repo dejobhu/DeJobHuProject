@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.dejobhu.skhu.dejobhu.Fragment.NoteBoxFragment;
 import com.dejobhu.skhu.dejobhu.Fragment.QuestionListFragment;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class list_MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new MyPostFragment(), "올린 게시물 목록");  //변경
         adapter.addFrag(new list_FABLayoutFragment(), "올린 댓글 목록");
-        adapter.addFrag(new list_SnackBarFragment(), "쪽지");
+        adapter.addFrag(new NoteBoxFragment(), "쪽지");
         viewPager.setAdapter(adapter);
     }
 

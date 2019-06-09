@@ -286,7 +286,6 @@ public class QuestionDetails extends Fragment {
                                 Intent intent = new Intent(getActivity(), SendNote.class);
 //        객체를 intent로 전달해야 함.
                                 intent.putExtra("recvUser", user);
-
                                 startActivity(intent);
                             }
                         } catch (JSONException e) {

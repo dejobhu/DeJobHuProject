@@ -2,7 +2,10 @@ package com.dejobhu.skhu.dejobhu;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,8 +35,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -43,6 +49,9 @@ public class MainFormActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     GetJoson getJoson = GetJoson.getInstance();
+    boolean isPassed;
+    URL url;
+    Bitmap bitmap;
 
     Callback autoLoginCallback = new Callback() {
         @Override
@@ -70,6 +79,7 @@ public class MainFormActivity extends AppCompatActivity
                 userInfo.setEmail(autoEmail);
                 userInfo.setId(autoId);
                 userInfo.setName(autoName);
+                isPassed = true;
 
 
             } catch (JSONException e) {
@@ -99,15 +109,17 @@ public class MainFormActivity extends AppCompatActivity
                 public void run() {
                     Log.d("자동로그인", "쓰레드");
                     getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
 
-                    }
                 }
             }).start();
 //                    todo: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
-
+            while (isPassed == false) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         Userinfo userInfo = Userinfo.shared;
@@ -161,6 +173,7 @@ public class MainFormActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+//        프래그먼트 설정하는 부분
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -168,9 +181,37 @@ public class MainFormActivity extends AppCompatActivity
                     .commit();
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View view = navigationView.getHeaderView(0);
 
-        View view = navigationView.getHeaderView(0);
+//        프로필 사진 설정을 위한것임.
+//        임의로 지정한 사진이 없어야함.
+        if(Userinfo.shared.getProfileIMG() != null) {
+            Thread profileThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        url = new URL("http://18.222.237.32/files/0.jpg");
+                        bitmap = BitmapFactory.decodeStream(url.openStream());
+                        Log.d("비트맵", bitmap + "");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            profileThread.start();
+            try {
+                profileThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.d("비트맵", bitmap + "");
 
+            if (bitmap != null)
+                ((CircleImageView) view.findViewById(R.id.nav_header_img)).setImageBitmap(bitmap);
+
+        }
 //        Log.d("자동로그인했을 때", Userinfo.shared.getName());
         ((TextView) view.findViewById(R.id.nav_header_name)).setText(userInfo.getName()); //Drawable 사용자 이름 변경
 

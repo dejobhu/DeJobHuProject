@@ -11,6 +11,15 @@ public class Userinfo {
     int id;
     String name;
     String email;
+    String profileIMG;
+
+    public String getProfileIMG() {
+        return profileIMG;
+    }
+
+    public void setProfileIMG(String profileIMG) {
+        this.profileIMG = profileIMG;
+    }
 
     public int getId() {
         return id;
