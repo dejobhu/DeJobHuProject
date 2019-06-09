@@ -6,4 +6,6 @@
     <color name="baseColor">#2ac1bc</color>
     <color name="backGround">#ebfafafa</color>
     <color name="naverbackGround">#09CE20</color>
+    <color name="black">#000000</color>
+
 </resources>
