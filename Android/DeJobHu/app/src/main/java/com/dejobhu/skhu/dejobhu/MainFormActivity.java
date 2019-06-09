@@ -253,8 +253,8 @@ public class MainFormActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == MenuOptions.NUM_SETTING) {
             Toast.makeText(getApplicationContext(), "설정 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-            /*Intent intent = new Intent(MainFormActivity.this, 설정 레이아웃);
-            startActivity(intent);*/
+            Intent intent = new Intent(MainFormActivity.this, MyPage.class);
+            startActivity(intent);
         }
 
 
@@ -271,12 +271,13 @@ public class MainFormActivity extends AppCompatActivity
             // Handle the camera action
             Intent intent = new Intent(MainFormActivity.this, list_MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_gallery){
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_share) {
-
+            Intent intent = new Intent(MainFormActivity.this, MyPage.class);
+            startActivity(intent);
         }
 //        로그아웃 버튼 리스너 설정.
         else if (id == R.id.nav_logout) {

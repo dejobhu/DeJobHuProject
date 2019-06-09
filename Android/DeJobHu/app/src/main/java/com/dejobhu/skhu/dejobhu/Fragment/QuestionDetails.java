@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.JsonReader;
@@ -207,6 +208,8 @@ public class QuestionDetails extends Fragment {
             return true;
         } else if (item.getItemId() == MenuOptions.NUM_DELETE) {
             Log.d("프래그먼트", "삭제하기");
+            runRemovePost();
+
             return true;
         } else if (item.getItemId() == MenuOptions.NUM_REPORT) {
             Log.d("프래그먼트", "신고하기");
@@ -351,6 +354,47 @@ public class QuestionDetails extends Fragment {
 //        Log.d("내 아이디랑 게시글의 아이디가 같은지", (Integer.parseInt(post_userId) == Userinfo.shared.getId()) + "");
 //        return true;/*(Integer.parseInt(post_userId) == Userinfo.shared.getId());*/
 
+    }
+    public void runRemovePost(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getJoson.requestWebServer("api/post/removePost", new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String s = response.body().string();
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if(jsonObject.getString("result").equals("NG")){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }else{
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "삭제 성공!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                fragmentManager.beginTransaction().remove(QuestionDetails.this).commit();
+                                fragmentManager.popBackStack();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, post_id+"");
+            }
+        }).start();
     }
 
     @Override
