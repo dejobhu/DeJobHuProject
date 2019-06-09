@@ -7,6 +7,10 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="action_remove">삭제하기</string>
+    <string name="action_modify">수정하기</string>
+    <string name="action_report">신고하기</string>
+    <string name="action_notes">쪽지보내기</string>
     <string name="action_settings">Settings</string>
     <string name="transition_name">transition_name</string>
     <string name="transition_sns">transition_sns</string>

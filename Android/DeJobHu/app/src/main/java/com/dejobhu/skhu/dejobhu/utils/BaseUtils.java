@@ -51,7 +51,6 @@ public class BaseUtils {
     }
 
 
-
     public static List<ItemCard> getCards(Resources resources, int type) {
         List<ItemCard> itemCards;
 

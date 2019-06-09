@@ -45,7 +45,6 @@ public class activity_login extends AppCompatActivity {
     boolean validEmail;
 
 
-
     //네이버 client 정보
     private static final String TAG = "OAuthSampleActivity";
     private static String OAUTH_CLIENT_ID = "TQP9iDx2BHY61vQBAJBf";
@@ -64,27 +63,26 @@ public class activity_login extends AppCompatActivity {
     private static TextView mOauthTokenType;
     private static TextView mOAuthState;
 
-  //  private OAuthLoginButton mOAuthLoginButton;
+    //  private OAuthLoginButton mOAuthLoginButton;
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         mContext = this;
 
-
         initData();
 
 
-        TextView textView_findId = (TextView)findViewById(R.id.textView_findID);
-        TextView textView_membership = (TextView)findViewById(R.id.textView_membership);
+        TextView textView_findId = (TextView) findViewById(R.id.textView_findID);
+        TextView textView_membership = (TextView) findViewById(R.id.textView_membership);
 
-        final TextView textView_ErrorEmail_ID = (TextView)findViewById(R.id.textView_ErrorEmail_ID);
-        final TextView textView_ErrorPassword = (TextView)findViewById(R.id.textView_ErrorPass);
-        TextView textView_findID = (TextView)findViewById(R.id.textView_findID);
-        final EditText editText_Email_ID = (EditText)findViewById(R.id.editText_Email_ID);
-        final EditText editText_Password = (EditText)findViewById(R.id.editText_Password);
-        Button button_login = (Button)findViewById(R.id.button_login);
+        final TextView textView_ErrorEmail_ID = (TextView) findViewById(R.id.textView_ErrorEmail_ID);
+        final TextView textView_ErrorPassword = (TextView) findViewById(R.id.textView_ErrorPass);
+        TextView textView_findID = (TextView) findViewById(R.id.textView_findID);
+        final EditText editText_Email_ID = (EditText) findViewById(R.id.editText_Email_ID);
+        final EditText editText_Password = (EditText) findViewById(R.id.editText_Password);
+        Button button_login = (Button) findViewById(R.id.button_login);
 
         // 비밀번호 찾기 액티비티로 넘어가는 버튼
         textView_findID.setOnClickListener(new View.OnClickListener() {
@@ -106,11 +104,10 @@ public class activity_login extends AppCompatActivity {
         textView_membership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(activity_login.this,membership_register.class);
+                Intent intent = new Intent(activity_login.this, membership_register.class);
                 startActivity(intent);
             }
         });
-
 
 
         //로그인 버튼을 눌럿을 때
@@ -147,9 +144,9 @@ public class activity_login extends AppCompatActivity {
 
                 if (validEmail && validPass) {
                     //                만약 자동로그인 버튼을 눌렀다면
-                    CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
+                    CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
                     isAutoLoginChecked = checkBox.isChecked();
-                    if(isAutoLoginChecked){
+                    if (isAutoLoginChecked) {
 //                  만약 자동로그인 체크 되어잇으면 그 정보를 저장하고, 다음에 불러올 때 UserInfo에 저장
                         SaveSharedPreference.setUserEmail(activity_login.this, Email_ID);
                     }
@@ -172,7 +169,6 @@ public class activity_login extends AppCompatActivity {
         });
 
 
-
 //        imageView_Close.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v){
@@ -189,7 +185,7 @@ public class activity_login extends AppCompatActivity {
         textView_membership.setText(content2);
     }
 
-      private void initData() {
+    private void initData() {
         mOAuthLoginInstance = OAuthLogin.getInstance();
 
         mOAuthLoginInstance.showDevelopersLog(true);
@@ -215,6 +211,7 @@ public class activity_login extends AppCompatActivity {
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler);
         updateView();
     }
+
     private void updateView() {
 
     }
@@ -281,12 +278,12 @@ public class activity_login extends AppCompatActivity {
     }
 
 
-
     private class RefreshTokenTask extends AsyncTask<Void, Void, String> {
         @Override
         protected void onPreExecute() {
             mApiResultText.setText((String) "");
         }
+
         @Override
         protected String doInBackground(Void... params) {
             return mOAuthLoginInstance.refreshAccessToken(mContext);
@@ -298,12 +295,12 @@ public class activity_login extends AppCompatActivity {
 
     }
 
-    static boolean isEmptyOrWhiteSpace(String s){
+    static boolean isEmptyOrWhiteSpace(String s) {
         if (s == null) return true;
         return s.trim().length() == 0;
     }
 
-//    로그인 콜백함수
+    //    로그인 콜백함수
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -319,7 +316,7 @@ public class activity_login extends AppCompatActivity {
 
 
                 JSONObject jsonObject = new JSONObject(s);
-                if(jsonObject.getString("result").equals("NG") || jsonObject.getString("result").equals("1000")) {
+                if (jsonObject.getString("result").equals("NG") || jsonObject.getString("result").equals("1000")) {
 
                     //스레드(Main) 안에 스레드(Button 안의 URL통신을 위한 스레드)를 구현했기 때문에 액티비티 UI가 표시되지 않는다. 따라서
                     //main부에서 직접 UI를 띄워주기 위해 runOnUiThread를 사용한다.
@@ -335,12 +332,12 @@ public class activity_login extends AppCompatActivity {
                 }
                 //만약 result가 NG가 아닌 다른 것이 나온다면 화면전환을 해준다.
                 //jsonObject를 이용한 사용자 정보 추출 구현해야함
-                else{
+                else {
 
 
-                    JSONObject user=jsonObject.getJSONObject("data");
+                    JSONObject user = jsonObject.getJSONObject("data");
 //                    JSONObject user=data.getJSONObject("0");
-                    Userinfo userinfo=Userinfo.shared;
+                    Userinfo userinfo = Userinfo.shared;
 
                     //JsonData 파싱
                     userinfo.setId(user.getInt("id"));
@@ -358,15 +355,15 @@ public class activity_login extends AppCompatActivity {
     };
 
 
-    private boolean validTestForPass(String pass){
-        if(pass.length() >= 8 && pass.length() <=20)
+    private boolean validTestForPass(String pass) {
+        if (pass.length() >= 8 && pass.length() <= 20)
             return true;
         else
             return false;
     }
 
-    private boolean validTestForEmail(String email){
-        if(Patterns.EMAIL_ADDRESS.matcher(email).matches())
+    private boolean validTestForEmail(String email) {
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
             return true;
         else return false;
     }

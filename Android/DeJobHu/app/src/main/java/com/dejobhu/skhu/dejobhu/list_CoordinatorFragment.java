@@ -18,19 +18,19 @@ public class list_CoordinatorFragment extends Fragment {
     RecyclerView recyclerView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_coordinator_layout, container, false);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         setupRecyclerView(recyclerView);
         return rootView;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView){
+    private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 
     }
 
-    public static class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder>{
+    public static class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
         private String[] mValues;
         private Context mContext;
 

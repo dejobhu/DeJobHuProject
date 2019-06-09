@@ -1,7 +1,6 @@
 package com.dejobhu.skhu.dejobhu.Fragment;
 
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
@@ -57,25 +56,25 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 public class QuestionListFragment extends Fragment {
 
-    FastOutSlowInInterpolator transition=new FastOutSlowInInterpolator();
-    private final Long TRASITION_DURATION=1000L;
-    private final String TAP_POSTION="tap_position";
+    FastOutSlowInInterpolator transition = new FastOutSlowInInterpolator();
+    private final Long TRASITION_DURATION = 1000L;
+    private final String TAP_POSTION = "tap_position";
 
-    int page=1;
-    int lastpage=1;
-    private  int tapPosition=NO_POSITION;
-    Rect viewRect=new Rect();
+    int page = 1;
+    int lastpage = 1;
+    private int tapPosition = NO_POSITION;
+    Rect viewRect = new Rect();
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
-    ArrayList<Question> arrayList= new ArrayList<Question>();
-
+    ArrayList<Question> arrayList = new ArrayList<Question>();
 
 
     ProgressBar progressBar;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.questionsns,container,false);
+        return inflater.inflate(R.layout.questionsns, container, false);
     }
 
     @Override
@@ -83,25 +82,24 @@ public class QuestionListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-            tapPosition=savedInstanceState.getInt(TAP_POSTION,NO_POSITION);
-        }catch (NullPointerException e)
-        {
-            tapPosition=NO_POSITION;
+            tapPosition = savedInstanceState.getInt(TAP_POSTION, NO_POSITION);
+        } catch (NullPointerException e) {
+            tapPosition = NO_POSITION;
         }
 
 
         postponeEnterTransition();
 
-        recyclerView=view.findViewById(R.id.questionList);
-        progressBar=view.findViewById(R.id.progressBar);
+        recyclerView = view.findViewById(R.id.questionList);
+        progressBar = view.findViewById(R.id.progressBar);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(),LinearLayoutManager.VERTICAL));
-         adapter=new QuestionAdapter();
+        recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), LinearLayoutManager.VERTICAL));
+        adapter = new QuestionAdapter();
         recyclerView.setAdapter(adapter);
 
-        final SNSViewModal viewModal=ViewModelProviders.of(this).get(SNSViewModal.class);
+        final SNSViewModal viewModal = ViewModelProviders.of(this).get(SNSViewModal.class);
 
-        if(viewModal.getEmails().getValue()==null) viewModal.getQustions();
+        if (viewModal.getEmails().getValue() == null) viewModal.getQustions();
 
         viewModal.getEmails().observe(this, new Observer<State>() {
             @Override
@@ -112,31 +110,30 @@ public class QuestionListFragment extends Fragment {
 
     }
 
-    private void render(State state)
-    {
-        if(state instanceof State.InProgress){
+    private void render(State state) {
+        if (state instanceof State.InProgress) {
             recyclerView.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
-                    GetJoson joson=GetJoson.getInstance();
-                    joson.PageRequest("api/post/all",callback,"page="+page);
+                    GetJoson joson = GetJoson.getInstance();
+                    joson.PageRequest("api/post/all", callback, "page=" + page);
                 }
             }.run();
             startPostponedEnterTransition();
-        }else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
 
             //현재 body 기준으로 갈라짐
 
-            ((QuestionAdapter)adapter).setData(arrayList);
+            ((QuestionAdapter) adapter).setData(arrayList);
             getView().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    if(getExitTransition()==null) {
-                        SlideExpload slideExpload=new SlideExpload();
+                    if (getExitTransition() == null) {
+                        SlideExpload slideExpload = new SlideExpload();
                         slideExpload.setDuration(TRASITION_DURATION)
                                 .setInterpolator(transition);
                         setExitTransition(slideExpload);
@@ -145,10 +142,10 @@ public class QuestionListFragment extends Fragment {
                 }
             });
 
-            LinearLayoutManager linearLayoutManager= (LinearLayoutManager) recyclerView.getLayoutManager();
-            View view=linearLayoutManager.findViewByPosition(tapPosition);
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            View view = linearLayoutManager.findViewByPosition(tapPosition);
 
-            if(view!=null) {
+            if (view != null) {
                 view.getGlobalVisibleRect(viewRect); //왜 쓴건지 모르겠음
 
                 ((Transition) getExitTransition()).setEpicenterCallback(new Transition.EpicenterCallback() {
@@ -163,7 +160,7 @@ public class QuestionListFragment extends Fragment {
         }
     }
 
-    private Callback callback=new Callback() {
+    private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
 
@@ -171,34 +168,33 @@ public class QuestionListFragment extends Fragment {
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
-            String s= response.body().string();
+            String s = response.body().string();
             try {
-                JSONObject object=new JSONObject(s);
-                if(object.getInt("result")==2000)
-                {
-                    JSONObject data=object.getJSONObject("data");
-                    JSONArray array=data.getJSONArray("data");
-                    lastpage=data.getInt("last_page");
+                JSONObject object = new JSONObject(s);
+                if (object.getInt("result") == 2000) {
+                    JSONObject data = object.getJSONObject("data");
+                    JSONArray array = data.getJSONArray("data");
+                    lastpage = data.getInt("last_page");
 
-                    for(int i=0;i<array.length();i++)
-                    {
-                        JSONObject value=array.getJSONObject(i);
-                        arrayList.add(new Question(value.getInt("id"),value.getString("user_name"),value.getString("title"),value.getString("created_at"),null));
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject value = array.getJSONObject(i);
+                        arrayList.add(new Question(value.getInt("id"), value.getString("user_name"), value.getString("title"), value.getString("created_at"), null));
 
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(),"게시글을 불러왔습니다",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "게시글을 불러왔습니다", Toast.LENGTH_LONG).show();
                             adapter.notifyDataSetChanged();
-                        }});
-                }else
-                {
+                        }
+                    });
+                } else {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(),"서버통신이 실패했습니다. 관리자에게 문의주세요",Toast.LENGTH_LONG).show();
-                        }});
+                            Toast.makeText(getContext(), "서버통신이 실패했습니다. 관리자에게 문의주세요", Toast.LENGTH_LONG).show();
+                        }
+                    });
 
                 }
 
@@ -206,13 +202,14 @@ public class QuestionListFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getContext(),"서버통신이 실패했습니다. 관리자에게 문의주세요",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "서버통신이 실패했습니다. 관리자에게 문의주세요", Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
         }
     };
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -231,29 +228,29 @@ public class QuestionListFragment extends Fragment {
         }
 
         @Override
-        public QuestionViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
-            View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.questioncard,parent,false);
+        public QuestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.questioncard, parent, false);
             return new QuestionViewHolder(view);
         }
 
+        //        게시글들 중에서 한 게시물을 선택했을때 진행되는 매소드
         @Override
         public void onBindViewHolder(QuestionViewHolder holder, final int position) {
 
-            final int p=position;
-            final QuestionViewHolder holder1=holder;
-            View.OnClickListener listener=new View.OnClickListener() {
+            final int p = position;
+            final QuestionViewHolder holder1 = holder;
+            View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     tapPosition = p;
                     holder1.itemView.getGlobalVisibleRect(viewRect);
 
-                    ((Transition)getExitTransition()).setEpicenterCallback(new Transition.EpicenterCallback() {
+                    ((Transition) getExitTransition()).setEpicenterCallback(new Transition.EpicenterCallback() {
                         @Override
                         public Rect onGetEpicenter(Transition transition) {
                             return viewRect;
                         }
                     });
-
 
                     TransitionSet sharedElementTransition = new TransitionSet()
                             .addTransition(new ChangeBounds())
@@ -263,6 +260,7 @@ public class QuestionListFragment extends Fragment {
                     sharedElementTransition.setDuration(TRASITION_DURATION);
                     sharedElementTransition.setInterpolator(transition);
 
+//                    이 다음 코드로 인해 내가 게시물을 눌렀을때 해당 게시물의 details가 나오게 되는것임.
                     Fragment fragment = new QuestionDetails(arrayList.get(p).GetId());
                     fragment.setSharedElementEnterTransition(sharedElementTransition);
                     fragment.setSharedElementReturnTransition(sharedElementTransition);
@@ -273,21 +271,20 @@ public class QuestionListFragment extends Fragment {
                                 .setReorderingAllowed(true)
                                 .replace(R.id.container, fragment)
                                 .addToBackStack(null)
-                                .addSharedElement(holder1.itemView,getString(R.string.transition_name))
-                               .commit();
+                                .addSharedElement(holder1.itemView, getString(R.string.transition_name))
+                                .commit();
 
 
-                    }catch (NullPointerException e)
-                    {
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
             };
 
-            holder.bindListener(mData.get(position).getBody(),listener);
-            try{
+            holder.bindListener(mData.get(position).getBody(), listener);
+            try {
                 holder.imageView.setImageBitmap(mData.get(position).getImage());
-            }catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             holder.body.setText(mData.get(position).getBody());
@@ -305,12 +302,12 @@ public class QuestionListFragment extends Fragment {
         public int getItemCount() {
             try {
                 return mData.size();
-            }catch (NullPointerException e)
-            {
+            } catch (NullPointerException e) {
                 return 0;
             }
         }
     }
+
     class QuestionViewHolder extends RecyclerView.ViewHolder {
         TextView body;
         TextView ID;
@@ -320,17 +317,16 @@ public class QuestionListFragment extends Fragment {
 
         public QuestionViewHolder(@NonNull View itemView) {
             super(itemView);
-            view=itemView;
-            body=itemView.findViewById(R.id.question_title);
-            ID=itemView.findViewById(R.id.question_id);
-            Time=itemView.findViewById(R.id.question_time);
-            imageView=itemView.findViewById(R.id.question_image);
+            view = itemView;
+            body = itemView.findViewById(R.id.question_title);
+            ID = itemView.findViewById(R.id.question_id);
+            Time = itemView.findViewById(R.id.question_time);
+            imageView = itemView.findViewById(R.id.question_image);
 
 
         }
 
-        void bindListener(String question,View.OnClickListener listener)
-        {
+        void bindListener(String question, View.OnClickListener listener) {
             view.setOnClickListener(listener);
             view.setTransitionName(question);
         }

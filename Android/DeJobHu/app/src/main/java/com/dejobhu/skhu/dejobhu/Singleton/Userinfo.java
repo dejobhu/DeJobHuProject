@@ -2,10 +2,12 @@ package com.dejobhu.skhu.dejobhu.Singleton;
 
 public class Userinfo {
 
-    public static Userinfo shared=new Userinfo();
-    private  Userinfo(){
+    public static Userinfo shared = new Userinfo();
+
+    private Userinfo() {
 
     }
+
     int id;
     String name;
     String email;

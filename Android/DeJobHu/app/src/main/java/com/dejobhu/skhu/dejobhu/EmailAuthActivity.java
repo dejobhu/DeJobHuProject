@@ -32,6 +32,7 @@ public class EmailAuthActivity extends AppCompatActivity {
     int authPass;
     int count;
     GetJoson getJoson = GetJoson.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,19 +41,19 @@ public class EmailAuthActivity extends AppCompatActivity {
         Intent intent = getIntent(); // membership_register로부터 넘어온 인텐트 값 수신
         final String passedEmail = intent.getStringExtra("email");
         Log.d("넘어온 이메일 : ", passedEmail);
-        final Button authButton = (Button)findViewById(R.id.authButton);
+        final Button authButton = (Button) findViewById(R.id.authButton);
         authButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isOnceClicked) {
+                if (!isOnceClicked) {
                     timeGoes(300);
                     isOnceClicked = true;
                     Random random = new Random();
                     authPass = random.nextInt(900000) + 100000;
-                    Log.d("인증번호 : " , "" + authPass);
+                    Log.d("인증번호 : ", "" + authPass);
                     //int 형을 String으로 바꾸어주어야 하므로.
                     final String paramPass = Integer.toString(authPass);
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             getJoson.requestWebServer("mail", mailCallback, passedEmail, paramPass);
@@ -61,21 +62,21 @@ public class EmailAuthActivity extends AppCompatActivity {
                 }
             }
         });
-        timeText = (EditText)findViewById(R.id.timer);
-        insertPass = (EditText)findViewById(R.id.insertPass);
+        timeText = (EditText) findViewById(R.id.timer);
+        insertPass = (EditText) findViewById(R.id.insertPass);
 
-        Button sendButton = (Button)findViewById(R.id.sendButton);
+        Button sendButton = (Button) findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String randPass = authPass + "";
                 String userPass = insertPass.getText().toString();
-                if(count <= 0) {
+                if (count <= 0) {
                     Toast.makeText(getApplicationContext(), "시간이 초과되었습니다. 다시 메일을 인증해주세요.", Toast.LENGTH_LONG).show();
                     isOnceClicked = false;
                     return;
                 }
-                if(userPass.equals(randPass)){
+                if (userPass.equals(randPass)) {
                     Intent intent = new Intent();
                     intent.putExtra("Success", "true");
                     setResult(RESULT_OK, intent);
@@ -87,6 +88,7 @@ public class EmailAuthActivity extends AppCompatActivity {
         });
 
     }
+
     private Callback mailCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -103,15 +105,14 @@ public class EmailAuthActivity extends AppCompatActivity {
                     Log.d("String 값은", s);
                     try {
                         JSONObject jsonObject = new JSONObject(s);
-                        if(jsonObject.getString("result").equals("2000")){
+                        if (jsonObject.getString("result").equals("2000")) {
                             EmailAuthActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(getApplicationContext(), "성공적으로 메일을 전송했습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }
-                        else{
+                        } else {
                             EmailAuthActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -129,18 +130,18 @@ public class EmailAuthActivity extends AppCompatActivity {
     };
 
 
-    public String expressTime(int time){
+    public String expressTime(int time) {
         int minute = time / 60;
         int second = time % 60;
         return minute + "분 " + second + "초";
     }
 
-    public void timeGoes(int time){
+    public void timeGoes(int time) {
         count = time;
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                if(count == 0) {
+                if (count == 0) {
                     timer.cancel();
                     return;
                 }
@@ -155,7 +156,7 @@ public class EmailAuthActivity extends AppCompatActivity {
             }
         };
 
-        timer= new Timer();
+        timer = new Timer();
         timer.schedule(tt, 0, 1000);
 
     }
