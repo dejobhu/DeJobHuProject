@@ -323,7 +323,7 @@ public class QuestionDetails extends Fragment {
                                 post_userId = user.getInt("id");
                                 Log.d("받아온 아이디", "" + post_userId);
                                 isPassed = true;
-                            }d
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
