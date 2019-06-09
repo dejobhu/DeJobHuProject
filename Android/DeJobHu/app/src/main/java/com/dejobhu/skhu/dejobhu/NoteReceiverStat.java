@@ -1,6 +1,8 @@
 package com.dejobhu.skhu.dejobhu;
 
-public class NoteReceiverStat {
+import java.io.Serializable;
+
+public class NoteReceiverStat implements Serializable {
     public int id;
     public String name;
     public String email;

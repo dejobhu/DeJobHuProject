@@ -38,6 +38,7 @@
             android:label="@string/title_activity_main_form"
             android:theme="@style/AppTheme" />
         <activity android:name=".membership_register" />
+        <activity android:name=".SendNote" />
         <activity android:name=".MainFormActivity" />
         <activity android:name=".list_MainActivity" />
         <activity android:name=".loginActivity" /> <!-- [naveroauthlogin][start] 네이버아이디로로그인을 사용하기 위해서 넣어줘야하는 부분 -->

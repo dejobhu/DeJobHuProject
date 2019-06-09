@@ -43,6 +43,7 @@ public class MainFormActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     GetJoson getJoson = GetJoson.getInstance();
+
     Callback autoLoginCallback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -59,16 +60,18 @@ public class MainFormActivity extends AppCompatActivity
 //                Log.d("자동로그인", "try-catch문");
                 JSONObject dataObject = jsonObject.getJSONObject("data");
 //                Log.d("id", dataObject.getInt("id"));
-                int id = dataObject.getInt("id");
-                String email = dataObject.getString("email");
-                String name = dataObject.getString("name");
+                int autoId = dataObject.getInt("id");
+                String autoEmail = dataObject.getString("email");
+                String autoName = dataObject.getString("name");
 //                Log.d("자동로그인 id", Integer.toString(id));
 //                Log.d("자동로그인 email", email);
 //                Log.d("자동로그인 name", name);
-                Userinfo user = Userinfo.shared;
-                user.setEmail(email);
-                user.setId(id);
-                user.setName(name);
+                Userinfo userInfo = Userinfo.shared;
+                userInfo.setEmail(autoEmail);
+                userInfo.setId(autoId);
+                userInfo.setName(autoName);
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -96,10 +99,19 @@ public class MainFormActivity extends AppCompatActivity
                 public void run() {
                     Log.d("자동로그인", "쓰레드");
                     getJoson.requestWebServer("api/retUserStatByEmail", autoLoginCallback, email);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+
+                    }
                 }
             }).start();
 //                    todo: 자동로그인에 의해 인텐트 전달받음, 그 이메일로 JSON 얻어와서 id랑, 닉네임 확보하고 Userinfo에 저장하는것까지 완수하기 !
+
         }
+
+        Userinfo userInfo = Userinfo.shared;
+        Log.d("UserInfo", userInfo.getName() + "");
 
 
         //----------------------Toobar Setting---------------------------------------------------
@@ -159,7 +171,8 @@ public class MainFormActivity extends AppCompatActivity
 
         View view = navigationView.getHeaderView(0);
 
-        ((TextView) view.findViewById(R.id.nav_header_name)).setText(Userinfo.shared.getName()); //Drawable 사용자 이름 변경
+//        Log.d("자동로그인했을 때", Userinfo.shared.getName());
+        ((TextView) view.findViewById(R.id.nav_header_name)).setText(userInfo.getName()); //Drawable 사용자 이름 변경
 
 
         // 별점 받아오기 , 프로필 받아오기, 회원등급 받아오기
@@ -184,6 +197,7 @@ public class MainFormActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_form, menu);
 
+        menu.add(MenuOptions.NUM_MAIN, MenuOptions.NUM_SETTING, 0, "설정");
 
         return true;
     }
@@ -196,7 +210,11 @@ public class MainFormActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-
+        if (id == MenuOptions.NUM_SETTING) {
+            Toast.makeText(getApplicationContext(), "설정 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+            /*Intent intent = new Intent(MainFormActivity.this, 설정 레이아웃);
+            startActivity(intent);*/
+        }
 
 
         return super.onOptionsItemSelected(item);

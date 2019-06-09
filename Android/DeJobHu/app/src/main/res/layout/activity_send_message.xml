@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/exitImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -24,11 +24,11 @@
         android:layout_marginTop="12dp"
         android:text="쪽지 보내기"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/exitImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/sendButton"
         android:layout_width="70dp"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"
@@ -41,6 +41,8 @@
 
     <EditText
         android:id="@+id/notecontent"
+        android:gravity="top"
+        android:hint="내용을 입력하세요."
         android:layout_width="395dp"
         android:layout_height="667dp"
         android:layout_marginStart="8dp"
